@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/lib/EnhancedListView/src/main/EnhancedListView.iml" filepath="$PROJECT_DIR$/lib/EnhancedListView/src/main/EnhancedListView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib/NineOld/NineOld.iml" filepath="$PROJECT_DIR$/lib/NineOld/NineOld.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib/ViewPagerIndicator/ViewPagerIndicator.iml" filepath="$PROJECT_DIR$/lib/ViewPagerIndicator/ViewPagerIndicator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Whizz Do.iml" filepath="$PROJECT_DIR$/Whizz Do.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib/supertoasts/supertoasts.iml" filepath="$PROJECT_DIR$/lib/supertoasts/supertoasts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib/ListViewAnimation/tests/tests.iml" filepath="$PROJECT_DIR$/lib/ListViewAnimation/tests/tests.iml" />
+    </modules>
+  </component>
+</project>
+

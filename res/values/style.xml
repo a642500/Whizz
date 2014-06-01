@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MyTheme" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/MyTheme.ActionBar</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:actionModeStyle">@android:style/Widget.Holo.ActionMode</item>
+        <item name="android:actionModeBackground">@color/action_mode_background</item>
+        <item name="android:actionModeCloseDrawable">@drawable/icon_action_mode_back</item>
+        <item name="android:actionOverflowButtonStyle">@android:style/Widget.Holo.ActionButton.Overflow</item>
+    </style>
+
+    <style name="MyTheme.ActionBar" parent="android:Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/action_bar</item>
+    </style>
+
+    <style name="MyTheme.MyEditText" parent="android:Widget.Holo.Light.EditText">
+        <item name="android:background">@color/main_background</item>
+    </style>
+
+    <style name="MyTheme.ButtonBarStyle" parent="android:Holo.Light.ButtonBar">
+        <item name="android:divider">@color/main_background</item>
+    </style>
+
+
+
+</resources>
