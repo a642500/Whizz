@@ -6,7 +6,7 @@
     <color name="line_urgency">#ff3300</color>
     <color name="line_normal">#3399ff</color>
     <color name="line_ease">#999999</color>
-    <color name="line_separate">#cccccc</color>
+    <color name="line_separate">#40cccccc</color>
 
     <color name="main_background">#fff</color>
     <color name="text_color">#333333</color>

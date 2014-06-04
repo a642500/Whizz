@@ -470,6 +470,8 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
                 }
                 mode.finish();
                 break;
+            case R.id.actionMode_select_all:
+                break;
         }
         return false;
     }

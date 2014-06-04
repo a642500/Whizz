@@ -68,7 +68,6 @@ public class NoticeMonitorService extends Service {
         registerReceiver(mBroadcastReceiver, new IntentFilter(Intent.ACTION_BOOT_COMPLETED));
         registerReceiver(mBroadcastReceiver, new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED));
         registerReceiver(mBroadcastReceiver, new IntentFilter(Intent.ACTION_BATTERY_LOW));
-        registerReceiver(mBroadcastReceiver, new IntentFilter(Intent.ACTION_MAIN));
         registerReceiver(mBroadcastReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
         registerReceiver(mBroadcastReceiver, new IntentFilter(Intent.ACTION_USER_PRESENT));
         registerReceiver(mBroadcastReceiver, new IntentFilter(Intent.ACTION_PACKAGE_ADDED));
@@ -87,6 +86,7 @@ public class NoticeMonitorService extends Service {
 
     private void setListeners() {
         final ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        Log.i("setListeners()","a OnPrimaryClipChangedListener() was added!");
         clipboardManager.addPrimaryClipChangedListener(new ClipboardManager.OnPrimaryClipChangedListener() {
             @Override
             public void onPrimaryClipChanged() {
@@ -161,7 +161,7 @@ public class NoticeMonitorService extends Service {
 
                 break;
             case PICTURE_WHITH_BUTTON_TOAST:
-
+                break;
             default:
                 superToast = SuperToast.create(this, text, time);
                 superToast.setBackground(R.drawable.toast_background);
