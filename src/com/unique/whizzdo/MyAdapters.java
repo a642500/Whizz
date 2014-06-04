@@ -95,6 +95,7 @@ class MyListAdapter extends BaseAdapter {
 
         if (view != null) {
             LinearLayout container = ((LinearLayout) convertView.findViewById(R.id.item_image_container));
+            container.removeAllViews();
             container.setVisibility(View.VISIBLE);
             container.addView(view);
         }
