@@ -42,7 +42,7 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
     public static final int SCROLL_FLAG_FROM_ONE_TO_TWO = 0;
     public static final int SCROLL_FLAG_FROM_TWO_TO_ONE = 1;
 
-    final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm 编辑");
+    final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm 创建");
     private LayoutInflater mInflater;
     private Spinner mDaySpinner, mTimeSpinner;
     private ViewPager mViewPager;
