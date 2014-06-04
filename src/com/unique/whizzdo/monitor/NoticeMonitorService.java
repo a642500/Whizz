@@ -1,27 +1,23 @@
 package com.unique.whizzdo.monitor;
 
-import android.app.ActionBar;
 import android.app.Service;
 import android.content.*;
-import android.database.Cursor;
+import android.graphics.Point;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
-import android.provider.ContactsContract;
-import android.provider.Telephony;
+import android.view.WindowManager.LayoutParams;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.unique.whizzdo.R;
 import com.unique.whizzdo.application.MyBinder;
+import com.unique.whizzdo.data.DatabaseHelper;
+import com.unique.whizzdo.data.Note;
 
-import java.sql.Time;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.ArrayList;
 
 /**
  * Created by Carlos on 4/16/2014.
@@ -94,76 +90,86 @@ public class NoticeMonitorService extends Service {
         clipboardManager.addPrimaryClipChangedListener(new ClipboardManager.OnPrimaryClipChangedListener() {
             @Override
             public void onPrimaryClipChanged() {
+                Log.i("onPrimaryClipChanged()", "listen !");
                 ClipData clip = clipboardManager.getPrimaryClip();
-//                if (clip != null) {
-//
-//                    String text = null;
-//                    String title = null;
-//
-//                    // Gets the first item from the clipboard data
-//                    ClipData.Item item = clip.getItemAt(0);
-//
-//                    // Tries to get the item's contents as a URI pointing to a note
-//                    Uri uri = item.getUri();
-//
-//                    // Tests to see that the item actually is an URI, and that the URI
-//                    // is a content URI pointing to a provider whose MIME type is the same
-//                    // as the MIME type supported by the Note pad provider.
-//                    if (uri != null && NotePad.Notes.CONTENT_ITEM_TYPE.equals(cr.getType(uri))) {
-//                        // The clipboard holds a reference to data with a note MIME type. This copies it.
-//                        Cursor orig = cr.query(
-//                                uri,            // URI for the content provider
-//                                PROJECTION,     // Get the columns referred to in the projection
-//                                null,           // No selection variables
-//                                null,           // No selection variables, so no criteria are needed
-//                                null            // Use the default sort order
-//                        );
-//                        // If the Cursor is not null, and it contains at least one record
-//                        // (moveToFirst() returns true), then this gets the note data from it.
-//                        if (orig != null) {
-//                            if (orig.moveToFirst()) {
-//                                int colNoteIndex = mCursor.getColumnIndex(NotePad.Notes.COLUMN_NAME_NOTE);
-//                                int colTitleIndex = mCursor.getColumnIndex(NotePad.Notes.COLUMN_NAME_TITLE);
-//                                text = orig.getString(colNoteIndex);
-//                                title = orig.getString(colTitleIndex);
-//                            }
-//                            // Closes the cursor.
-//                            orig.close();
-//                        }
-//                    }
-//                    // If the contents of the clipboard wasn't a reference to a note, then
-//                    // this converts whatever it is to text.
-//                    if (text == null) {
-//                        text = item.coerceToText(this).toString();
-//                    }
-//                    // Updates the current note with the retrieved title and text.
-////                }
+                if (clip != null) {
+                    ClipData.Item item = clip.getItemAt(0);
+
+
+                    if (item != null) {
+                        CharSequence text = item.getText();
+                        Uri uri = item.getUri();
+                        CharSequence htmlText = item.getHtmlText();
+                        Log.i("onPrimaryClipChanged()", "clipdata text: " + text + " uri: " + uri + " htmlText: " + htmlText + " intent: " + item.getIntent());
+                        if (text != null) {
+                            if (htmlText == null) {
+                                new Note.Builder().setContent(text.toString()).create().commit(DatabaseHelper.getDatabaseHelper(NoticeMonitorService.this));
+                                post(text.toString(), 3000, TEXT_WHITH_BUTTON_TOAST);
+                            } else {
+                                ArrayList<String> arrayList = new ArrayList<String>();
+                                arrayList.add(text.toString());
+                                new Note.Builder().setImagePaths(arrayList).create().commit(DatabaseHelper.getDatabaseHelper(NoticeMonitorService.this));
+                                post(text.toString(), 3000, PICTURE_WHITH_BUTTON_TOAST);
+                            }
+
+                        }
+                    }
+                }
             }
         });
     }
 
     public void post(String text, int time) {
-        SuperToast toast = SuperToast.create(this, text, time);
-        toast.setBackground(R.drawable.toast_background);
-        toast.setAnimations(SuperToast.Animations.POPUP);
-        toast.show();
+        post(text, time, SIMPLE_TOAST);
     }
 
-    public void postSpecial(String text, int time) {
-        Toast toast = new Toast(this);
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.toast_with_button, null);
-        ((TextView) view.findViewById(R.id.toast_text)).setText(text);
-        view.findViewById(R.id.toast_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    public static final int SIMPLE_TOAST = 0;
+    public static final int TEXT_WHITH_BUTTON_TOAST = 1;
+    public static final int PICTURE_WHITH_BUTTON_TOAST = 2;
+
+    public void post(String text, int time, int kind) {
+        SuperToast superToast;
+        switch (kind) {
+            case TEXT_WHITH_BUTTON_TOAST:
+                Toast toast = new Toast(this);
+                LayoutInflater inflater = LayoutInflater.from(this);
+                View view = inflater.inflate(R.layout.toast_with_button, null);
+                ((TextView) view.findViewById(R.id.toast_text)).setText(text);
+                view.findViewById(R.id.toast_button).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
 
-            }
-        });
-        toast.setView(view);
-        toast.setDuration(time);
-        toast.show();
+                    }
+                });
+                view.setFocusable(true);
+                toast.setView(view);
+                toast.setDuration(time);
+                toast.show();
+
+
+//
+//                WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+//                Point point = new Point();
+//                windowManager.getDefaultDisplay().getSize(point);
+//                WindowManager.LayoutParams params = new WindowManager.LayoutParams(LayoutParams.TYPE_PHONE, LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+//                params.width =  LayoutParams.WRAP_CONTENT;
+//                params.height = LayoutParams.WRAP_CONTENT;
+//                windowManager.addView(view, params);
+
+
+
+                break;
+            case PICTURE_WHITH_BUTTON_TOAST:
+
+            default:
+                superToast = SuperToast.create(this, text, time);
+                superToast.setBackground(R.drawable.toast_background);
+                superToast.setAnimations(SuperToast.Animations.POPUP);
+                superToast.show();
+        }
+
+
     }
 
     public IBinder onBind(Intent intent) {

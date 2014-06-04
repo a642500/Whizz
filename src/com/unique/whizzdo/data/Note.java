@@ -5,6 +5,7 @@ import android.os.Parcel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Carlos on 4/16/2014.
@@ -17,7 +18,7 @@ public class Note {
     public static final int NO_IMPORTANCE = -1;
     private int mImportance = NO_IMPORTANCE;
     private int ID = -1;
-    private String mContent = null;
+    private String mContent = "";
     private long mCreatedTime = 0;
     private boolean isFinished = false;
     private long mFinishedTime = 0;
