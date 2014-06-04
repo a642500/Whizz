@@ -14,6 +14,8 @@ import com.unique.whizzdo.data.MySQLiteOpenHelper;
 import com.unique.whizzdo.data.Note;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -56,6 +58,14 @@ class MyListAdapter extends BaseAdapter {
     public MyListAdapter(Context context, LayoutInflater inflater) {
         mContext = context;
         mNotes = DatabaseHelper.getDatabaseHelper(mContext.getApplicationContext()).getNotes(false, MySQLiteOpenHelper.COLUMN_CREATED_TIME, DatabaseHelper.DESC);
+        Collections.sort(mNotes, new Comparator<Note>() {
+            @Override
+            public int compare(Note lhs, Note rhs) {
+                int a = lhs.getImportance() == -1 ? 2 : lhs.getImportance();
+                int b = rhs.getImportance() == -1 ? 2 : rhs.getImportance();
+                return a - b;
+            }
+        });
         mInflater = inflater;
     }
 

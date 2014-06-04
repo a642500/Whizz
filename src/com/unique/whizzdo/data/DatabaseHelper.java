@@ -148,7 +148,9 @@ public class DatabaseHelper {
             if (cursor != null) {
                 cursor.close();
             }
-            database.close();
+            if (database != null) {
+                database.close();
+            }
         }
         return notes;
     }
