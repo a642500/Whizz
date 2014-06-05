@@ -96,11 +96,20 @@ class MyListAdapter extends BaseAdapter {
         View view = null;
         if (size > 1) {
             view = mInflater.inflate(R.layout.two_image_layout, null);
-            Picasso.with(mInflater.getContext()).load("file:" + note.getImagesPaths().get(size - 1)).error(R.drawable.load_image_error).into((ImageView) view.findViewById(R.id.image1));
-            Picasso.with(mInflater.getContext()).load("file:" + note.getImagesPaths().get(size - 2)).error(R.drawable.load_image_error).into((ImageView) view.findViewById(R.id.image2));
+            ImageView imageView1 = (ImageView) view.findViewById(R.id.image1);
+            imageView1.setTag(note.getImagesPaths().get(size - 1));
+            imageView1.setClickable(false);
+            Picasso.with(mInflater.getContext()).load("file:" + note.getImagesPaths().get(size - 1)).error(R.drawable.load_image_error).into(imageView1);
+            ImageView imageView2 = (ImageView) view.findViewById(R.id.image2);
+            imageView2.setTag(note.getImagesPaths().get(size - 2));
+            imageView2.setClickable(false);
+            Picasso.with(mInflater.getContext()).load("file:" + note.getImagesPaths().get(size - 2)).error(R.drawable.load_image_error).into(imageView2);
         } else if (size == 1) {
             view = mInflater.inflate(R.layout.image_layout, null);
-            Picasso.with(mInflater.getContext()).load("file:" + note.getImagesPaths().get(size - 1)).error(R.drawable.load_image_error).into((ImageView) view.findViewById(R.id.image));
+            ImageView imageView = (ImageView) view.findViewById(R.id.image);
+            imageView.setTag(note.getImagesPaths().get(size - 1));
+            imageView.setClickable(false);
+            Picasso.with(mInflater.getContext()).load("file:" + note.getImagesPaths().get(size - 1)).error(R.drawable.load_image_error).into(imageView);
         }
 
         if (view != null) {

@@ -11,11 +11,15 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/pic_height"
             android:layout_weight="1"
+            android:onClick="onClick"
+            android:longClickable="false"
             android:scaleType="centerCrop"/>
     <ImageView
             android:id="@+id/image2"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="@dimen/pic_height"
+            android:longClickable="false"
+            android:onClick="onClick"
             android:scaleType="centerCrop"/>
 </LinearLayout>

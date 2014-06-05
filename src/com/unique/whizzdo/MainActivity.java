@@ -111,6 +111,18 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
         super.onRestart();
     }
 
+    @Override
+    protected void onResume() {
+        Log.i("onResume()", "isEdit is " + isEdit + " mCurrentPage is " + mCurrentPage);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.i("onResume()", "isEdit is " + isEdit + " mCurrentPage is " + mCurrentPage);
+        super.onPause();
+    }
+
     /**
      * init and display.
      */
@@ -204,6 +216,7 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
      */
     private void refreshList() {
         //every item show up to 80 Words.Set by xml.
+        Log.i("refreshList()", "!!!");
         if (!DatabaseHelper.getDatabaseHelper(getApplicationContext()).hasNotes())
             mNoNote.setVisibility(View.VISIBLE);
             //if contain no items，not display list, and the notice for no item will displayed.
@@ -251,6 +264,7 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
                         Log.i("refreshNotePager()", "kind 1 was created ! ");
                         linearLayout = (LinearLayout) mInflater.inflate(R.layout.image_layout, null);
                         ImageView imageView = (ImageView) linearLayout.findViewById(R.id.image);
+                        imageView.setTag(mCurrentNote.getImagesPaths().get(i));
 //                        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentNote.getImagesPaths().get(i));
 //                        imageView.setImageBitmap(bitmap);
                         Picasso.with(MainActivity.this).load("file:" + mCurrentNote.getImagesPaths().get(i)).error(R.drawable.ic_launcher).into(imageView);
@@ -258,12 +272,16 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
                         Log.i("refreshNotePager()", "kind 2 was created ! i=" + i);
                         linearLayout = (LinearLayout) mInflater.inflate(R.layout.two_image_layout, null);
                         ImageView imageView1 = (ImageView) linearLayout.findViewById(R.id.image1);
+                        imageView1.setTag(mCurrentNote.getImagesPaths().get(i));
+
 //                        Bitmap bitmap1 = BitmapFactory.decodeFile(mCurrentNote.getImagesPaths().get(i));
 //                        imageView1.setImageBitmap(bitmap1);
                         Picasso.with(MainActivity.this).load("file:" + mCurrentNote.getImagesPaths().get(i)).error(R.drawable.ic_launcher).into(imageView1);
 
                         Log.i("refreshNotePager()", "kind 2 was created ! i=" + (i + 1));
                         ImageView imageView2 = (ImageView) linearLayout.findViewById(R.id.image2);
+                        imageView2.setTag(mCurrentNote.getImagesPaths().get(i));
+
 //                        Bitmap bitmap2 = BitmapFactory.decodeFile(mCurrentNote.getImagesPaths().get(i + 1));
 //                        imageView2.setImageBitmap(bitmap2);
                         Picasso.with(MainActivity.this).load("file:" + mCurrentNote.getImagesPaths().get(i + 1)).error(R.drawable.ic_launcher).into(imageView2);
@@ -324,7 +342,7 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         mCurrentPage = position;
 //
-        Log.i("vital", "Viewpager onPageScrolled ! position is :" + position + ", position offset is " + positionOffset + ", pixels is " + positionOffsetPixels);
+//        Log.i("vital", "Viewpager onPageScrolled ! position is :" + position + ", position offset is " + positionOffset + ", pixels is " + positionOffsetPixels);
 //        Log.i("vital", "isEdit is  " + isEdit);
 //TODO 仿x-plore的滑动
 
@@ -334,8 +352,8 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
 
     @Override
     public void onPageSelected(int position) {
-        Log.i("vital", "onPageSelected : position is " + position);
-        Log.i("vital", "isEdit is  " + isEdit);
+//        Log.i("vital", "onPageSelected : position is " + position);
+//        Log.i("vital", "isEdit is  " + isEdit);
     }
 
     @Override
@@ -353,7 +371,7 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
             onScrollPage(SCROLL_FLAG_FROM_TWO_TO_ONE);
             isEdit = false;
         }
-        Log.i("onPageScrollStateChanged()", "isEdit  is " + isEdit + " ,  mCurrentPage is " + mCurrentPage);
+//        Log.i("onPageScrollStateChanged()", "isEdit  is " + isEdit + " ,  mCurrentPage is " + mCurrentPage);
 //                Log.i("vital", "isEdit is  " + isEdit);
 
     }
@@ -522,6 +540,14 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
                 break;
             case R.id.no_note:
                 mViewPager.setCurrentItem(1);
+                break;
+            case R.id.image:
+            case R.id.image1:
+            case R.id.image2:
+                String path = (String) v.getTag();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse("file://" + path), "image/*");
+                startActivity(intent);
                 break;
             default:
                 break;

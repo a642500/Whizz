@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import com.unique.whizzdo.application.MyApplication;
+import com.unique.whizzdo.application.SettingsHelper;
 import com.unique.whizzdo.monitor.NoticeMonitorService;
 
 /**
@@ -17,6 +20,15 @@ public class TestActivity extends Activity implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_layout);
+
+        CheckBox checkBox = (CheckBox) findViewById(R.id.flash_light_checkBox);
+        checkBox.setChecked(SettingsHelper.isSnapFlash(this));
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SettingsHelper.setSnapFlash(isChecked, TestActivity.this);
+            }
+        });
     }
 
     @Override

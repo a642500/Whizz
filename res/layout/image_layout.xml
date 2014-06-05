@@ -7,6 +7,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/pic_height"
             android:src="@drawable/ic_launcher"
+            android:onClick="onClick"
+            android:longClickable="false"
             android:scaleType="centerCrop"/>
 
 </LinearLayout>

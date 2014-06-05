@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.WindowManager;
+import com.unique.whizzdo.additional.QuickSnapService;
 import com.unique.whizzdo.monitor.NoticeMonitorService;
 
 import java.util.List;
@@ -17,11 +18,10 @@ import java.util.Random;
  * initialize the account and database helper .start monitor service.
  */
 public class MyApplication extends Application {
-    private Initiator mInitiator = new Initiator();
-
-
     public static final int LOCAL_ACCOUNT = 0;
+    private Initiator mInitiator = new Initiator();
     private NoticeMonitorService mNoticeMonitorService;
+    private QuickSnapService mQuickSnapService;
 
     @Override
     public void onTerminate() {
@@ -69,8 +69,11 @@ public class MyApplication extends Application {
                 initAccount();
 
             //初始化各项服务
-            if (!checker.isNoticeServiceRunning())
+            if (!checker.isServiceRunning(NoticeMonitorService.class.getName()))
                 startNoticeService();
+            if (!checker.isServiceRunning(QuickSnapService.class.getName()))
+                startQuickSnapService();
+
         }
 
 
@@ -113,6 +116,21 @@ public class MyApplication extends Application {
                 }
             }, BIND_AUTO_CREATE);
         }
+
+        private void startQuickSnapService() {
+            Intent intent = new Intent("com.unique.whizzdo.additional.QuickSnapService");
+            startService(intent);
+            bindService(intent, new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    mQuickSnapService = (QuickSnapService) ((MyBinder) service).getService();
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                }
+            }, BIND_AUTO_CREATE);
+        }
     }
 
     public class InitCheck {
@@ -124,10 +142,6 @@ public class MyApplication extends Application {
             String account = sharedPreferences.getString("account", null);
             if (account == null) return 0;
             return 1;
-        }
-
-        protected boolean isNoticeServiceRunning() {
-            return isServiceRunning(NoticeMonitorService.class.getName());
         }
 
         private boolean isServiceRunning(String className) {
