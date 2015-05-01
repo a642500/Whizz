@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,21 +14,18 @@ import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.squareup.picasso.Picasso;
-import com.unique.whizzdo.application.ShortCutCreator;
-import com.unique.whizzdo.monitor.NoticeMonitorService;
-import com.viewpagerindicator.UnderlinePageIndicator;
 import com.unique.whizzdo.application.MyApplication;
+import com.unique.whizzdo.application.ShortCutCreator;
 import com.unique.whizzdo.data.DataChangedListener;
 import com.unique.whizzdo.data.DatabaseHelper;
 import com.unique.whizzdo.data.Note;
+import com.unique.whizzdo.monitor.NoticeMonitorService;
+import com.viewpagerindicator.UnderlinePageIndicator;
 import de.timroes.android.listview.EnhancedListView;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
@@ -162,6 +157,8 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
         DatabaseHelper.getDatabaseHelper(getApplicationContext()).setDatabaseChangedListener(this);
     }
 
+    private AdapterView.OnItemClickListener mListItemClickListener;
+    private AdapterView.OnItemLongClickListener mListItemLongClickListener;
 
     /* call by init() */
     private View initMainPager() {
@@ -170,25 +167,43 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
         mMainList = (EnhancedListView) itemListPager.findViewById(R.id.main_list);
         mNoNote = itemListPager.findViewById(R.id.no_note);
         mMainList.setDivider(getResources().getDrawable(R.drawable.line_divider));
-        mMainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        mListItemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mCurrentNote = (Note) view.getTag();
-                mViewPager.setCurrentItem(1, true);
-                onScrollPage(SCROLL_FLAG_FROM_ONE_TO_TWO);
+                if (mActionMode == null) {
+                    mCurrentNote = (Note) view.getTag();
+                    mViewPager.setCurrentItem(1, true);
+                    onScrollPage(SCROLL_FLAG_FROM_ONE_TO_TWO);
+                } else {
+                    if (mCheckedItem.contains(view.getTag())) {
+                        view.setBackgroundResource(R.color.main_background);
+                        Log.i("onItemClick()", "item " + position + " is removed from ArrayList");
+                        mCheckedItem.remove(view.getTag());
+
+                    } else {
+                        view.setBackgroundResource(R.color.selected_background);
+                        Log.i("onItemClick()", "item " + position + " is added to ArrayList");
+                        mCheckedItem.add((Note) view.getTag());
+                    }
+                }
+
             }
-        });
-        mMainList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        };
+
+        mMainList.setOnItemClickListener(mListItemClickListener);
+        mListItemLongClickListener = new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mActionMode != null) return true;
                 startActionMode(MainActivity.this);
                 view.setBackgroundResource(R.color.selected_background);
                 Log.i("onItemLongClick()", "start actionMode, item " + position + " is added to ArrayList");
                 mCheckedItem.add((Note) view.getTag());
                 return true;
             }
-
-        });
+        };
+        mMainList.setOnItemLongClickListener(mListItemLongClickListener);
         mMainList.setSwipeDirection(EnhancedListView.SwipeDirection.END).setDismissCallback(new EnhancedListView.OnDismissCallback() {
             @Override
             public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int position) {
@@ -444,26 +459,6 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
 
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        Map<String, Object> callback = new HashMap<String, Object>();
-        callback.put("onItemClick", mMainList.getOnItemClickListener());
-        callback.put("onItemLongClick", mMainList.getOnItemLongClickListener());
-        mode.setTag(callback);
-        mMainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mCheckedItem.contains(view.getTag())) {
-                    view.setBackgroundResource(R.color.main_background);
-                    Log.i("onItemClick()", "item " + position + " is removed from ArrayList");
-                    mCheckedItem.remove(view.getTag());
-
-                } else {
-                    view.setBackgroundResource(R.color.selected_background);
-                    Log.i("onItemClick()", "item " + position + " is added to ArrayList");
-                    mCheckedItem.add((Note) view.getTag());
-                }
-            }
-        });
-        mMainList.setOnItemLongClickListener(null);
         return true;
     }
 
@@ -497,9 +492,6 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        Map<String, Object> callback = (Map<String, Object>) mode.getTag();
-        mMainList.setOnItemClickListener((AdapterView.OnItemClickListener) callback.get("onItemClick"));
-        mMainList.setOnItemLongClickListener((AdapterView.OnItemLongClickListener) callback.get("onItemLongClick"));
         if (mCheckedItem.size() != 0) refreshList();
         mCheckedItem.clear();
         mActionMode = null;
