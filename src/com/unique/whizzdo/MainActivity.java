@@ -4,10 +4,8 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.*;
@@ -270,36 +268,37 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
             mDaySpinner.setVisibility(View.GONE);
             mTimeSpinner.setVisibility(View.GONE);
         } else {
-            if (mCurrentNote.getImagesPaths().size() > 0) {
+            if (mCurrentNote.getImagesUris().size() > 0) {
                 LinearLayout linearLayout;
-                for (int i = 0; i < mCurrentNote.getImagesPaths().size(); i += 2) {
-                    Log.i("load images", "Path is " + mCurrentNote.getImagesPaths().get(i));
+                Log.i("refreshNotePager()", "image path sizes: " + mCurrentNote.getImagesUris().size());
+                for (int i = 0; i < mCurrentNote.getImagesUris().size(); i += 2) {
+                    Log.i("load images", "Path is " + mCurrentNote.getImagesUris().get(i));
                     Log.i("refreshNotePager()", "add pic  i = " + i);
-                    if (i == mCurrentNote.getImagesPaths().size() - 1) {
+                    if (i == mCurrentNote.getImagesUris().size() - 1) {
                         Log.i("refreshNotePager()", "kind 1 was created ! ");
                         linearLayout = (LinearLayout) mInflater.inflate(R.layout.image_layout, null);
                         ImageView imageView = (ImageView) linearLayout.findViewById(R.id.image);
-                        imageView.setTag(mCurrentNote.getImagesPaths().get(i));
-//                        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentNote.getImagesPaths().get(i));
+                        imageView.setTag(mCurrentNote.getImagesUris().get(i));
+//                        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentNote.getImagesUris().get(i));
 //                        imageView.setImageBitmap(bitmap);
-                        Picasso.with(MainActivity.this).load("file:" + mCurrentNote.getImagesPaths().get(i)).error(R.drawable.ic_launcher).into(imageView);
+                        Picasso.with(MainActivity.this).load(mCurrentNote.getImagesUris().get(i)).error(R.drawable.ic_launcher).into(imageView);
                     } else {
                         Log.i("refreshNotePager()", "kind 2 was created ! i=" + i);
                         linearLayout = (LinearLayout) mInflater.inflate(R.layout.two_image_layout, null);
                         ImageView imageView1 = (ImageView) linearLayout.findViewById(R.id.image1);
-                        imageView1.setTag(mCurrentNote.getImagesPaths().get(i));
+                        imageView1.setTag(mCurrentNote.getImagesUris().get(i));
 
-//                        Bitmap bitmap1 = BitmapFactory.decodeFile(mCurrentNote.getImagesPaths().get(i));
+//                        Bitmap bitmap1 = BitmapFactory.decodeFile(mCurrentNote.getImagesUris().get(i));
 //                        imageView1.setImageBitmap(bitmap1);
-                        Picasso.with(MainActivity.this).load("file:" + mCurrentNote.getImagesPaths().get(i)).error(R.drawable.ic_launcher).into(imageView1);
+                        Picasso.with(MainActivity.this).load(mCurrentNote.getImagesUris().get(i)).error(R.drawable.ic_launcher).into(imageView1);
 
                         Log.i("refreshNotePager()", "kind 2 was created ! i=" + (i + 1));
                         ImageView imageView2 = (ImageView) linearLayout.findViewById(R.id.image2);
-                        imageView2.setTag(mCurrentNote.getImagesPaths().get(i));
+                        imageView2.setTag(mCurrentNote.getImagesUris().get(i));
 
-//                        Bitmap bitmap2 = BitmapFactory.decodeFile(mCurrentNote.getImagesPaths().get(i + 1));
+//                        Bitmap bitmap2 = BitmapFactory.decodeFile(mCurrentNote.getImagesUris().get(i + 1));
 //                        imageView2.setImageBitmap(bitmap2);
-                        Picasso.with(MainActivity.this).load("file:" + mCurrentNote.getImagesPaths().get(i + 1)).error(R.drawable.ic_launcher).into(imageView2);
+                        Picasso.with(MainActivity.this).load(mCurrentNote.getImagesUris().get(i + 1)).error(R.drawable.ic_launcher).into(imageView2);
                     }
                     mImageContainer.addView(linearLayout);
                 }
@@ -330,7 +329,6 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
                 //TODO 设定TimeSpinner的显示（显示特殊时刻和日期/读取时间）
             }
         }
-        System.gc();
     }
 
     @Override
@@ -438,7 +436,7 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
                     mCurrentNote.commit(DatabaseHelper.getDatabaseHelper(MainActivity.this));
                     Toast.makeText(MainActivity.this, "已保存", Toast.LENGTH_SHORT).show();
                     mCurrentNote = null;
-
+                    refreshList();
                 }
 
                 mImagePaths.clear();
@@ -536,9 +534,9 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
             case R.id.image:
             case R.id.image1:
             case R.id.image2:
-                String path = (String) v.getTag();
+                Uri uri = (Uri) v.getTag();
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse("file://" + path), "image/*");
+                intent.setDataAndType(uri, "image/*");
                 startActivity(intent);
                 break;
             default:
@@ -566,14 +564,9 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
             if (mCurrentNote == null) {
                 mCurrentNote = new Note();
             }
-
-            Cursor cursor = getContentResolver().query(uri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                mCurrentNote.getImagesPaths().add(path);
-                mCurrentNote.setContent(mTempText);
-                refreshNotePager();
-            }
+            mCurrentNote.getImagesUris().add(uri);
+            mCurrentNote.setContent(mTempText);
+            refreshNotePager();
             mTempText = "";
         }
     }

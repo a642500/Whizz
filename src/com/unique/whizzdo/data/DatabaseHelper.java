@@ -5,11 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.Parcel;
 import android.util.Log;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Carlos on 4/16/2014.
@@ -66,11 +67,14 @@ public class DatabaseHelper {
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(); //构造一个字节输出流
             ObjectOutputStream oos = new ObjectOutputStream(byteArrayOutputStream); //构造一个类输出流
-            oos.writeObject(note.getImagesPaths()); //写这个对象
+            Log.i("saveNotes()", "uri list" + Arrays.toString(note.getImagesUris().toArray()));
+            oos.writeObject(toStringList(note.getImagesUris())); //写这个对象
+            Log.i("saveNotes()", "string list" + Arrays.toString(toStringList(note.getImagesUris()).toArray()));
+
             byte[] buf = byteArrayOutputStream.toByteArray(); //从这个地层字节流中把传输的数组给一个新的数组
             oos.flush();
 
-            values.put(MySQLiteOpenHelper.COLUMN_IMAGES_PATH, buf);
+            values.put(MySQLiteOpenHelper.COLUMN_IMAGES_URIS, buf);
 
             if (note.getID() == -1) {
                 database.insert(MySQLiteOpenHelper.TABLE_NAME_NOTES, null, values);
@@ -91,6 +95,22 @@ public class DatabaseHelper {
         }
     }
 
+    private List<String> toStringList(List<Uri> uriList) {
+        List<String> list = new ArrayList<String>();
+        for (Uri uri : uriList) {
+            list.add(uri.toString());
+        }
+        return list;
+    }
+
+    private List<Uri> toUriList(List<String> stringList) {
+        List<Uri> list = new ArrayList<Uri>();
+        for (String s : stringList) {
+            list.add(Uri.parse(s));
+        }
+        return list;
+    }
+
     public static DatabaseHelper getDatabaseHelper(Context context) {
         if (mInstance == null) {
             mInstance = new DatabaseHelper(context);
@@ -107,17 +127,17 @@ public class DatabaseHelper {
      */
     public ArrayList<Note> getNotes(boolean isFinished, String OrdBy, String DescOrAsc) {
         SQLiteDatabase database = mHelper.getReadableDatabase();
-        Cursor cursor=null;
+        Cursor cursor = null;
         ArrayList<Note> notes = new ArrayList<Note>();
         try {
             if (database != null) {
                 cursor = database.query(true, MySQLiteOpenHelper.TABLE_NAME_NOTES, new String[]{MySQLiteOpenHelper.COLUMN_ID, MySQLiteOpenHelper.COLUMN_CONTENT,
                                 MySQLiteOpenHelper.COLUMN_CREATED_TIME, MySQLiteOpenHelper.COLUMN_IS_FINISHED, MySQLiteOpenHelper.COLUMN_FINISHED_TIME,
-                                MySQLiteOpenHelper.COLUMN_DEADLINE, MySQLiteOpenHelper.COLUMN_IS_NOTICE, MySQLiteOpenHelper.COLUMN_IMPORTANCE, MySQLiteOpenHelper.COLUMN_IMAGES_PATH},
+                                MySQLiteOpenHelper.COLUMN_DEADLINE, MySQLiteOpenHelper.COLUMN_IS_NOTICE, MySQLiteOpenHelper.COLUMN_IMPORTANCE, MySQLiteOpenHelper.COLUMN_IMAGES_URIS},
                         MySQLiteOpenHelper.COLUMN_IS_FINISHED + " = ? ", new String[]{String.valueOf(isFinished ? 1 : 0)}, null, null, OrdBy, null
                 );//TODO 降序和升序
                 while (cursor.moveToNext()) {
-                    byte[] listsByte = cursor.getBlob(cursor.getColumnIndex(MySQLiteOpenHelper.COLUMN_IMAGES_PATH));
+                    byte[] listsByte = cursor.getBlob(cursor.getColumnIndex(MySQLiteOpenHelper.COLUMN_IMAGES_URIS));
                     ByteArrayInputStream bais = new ByteArrayInputStream(listsByte);
                     ObjectInputStream ois = new ObjectInputStream(bais);
                     ArrayList<String> arrayList = (ArrayList<String>) ois.readObject();
@@ -131,14 +151,15 @@ public class DatabaseHelper {
                             .setDeadline(cursor.getLong(cursor.getColumnIndex(MySQLiteOpenHelper.COLUMN_DEADLINE)))
                             .setNotice(cursor.getInt(cursor.getColumnIndex(MySQLiteOpenHelper.COLUMN_IS_NOTICE)) == 1)
                             .setImportance(cursor.getInt(cursor.getColumnIndex(MySQLiteOpenHelper.COLUMN_IMPORTANCE)))
-                            .setImagePaths(arrayList)
+                            .setImageUris(toUriList(arrayList))
                             .create();
                     notes.add(note);
 
                     Log.i("getNotes()", "note  is " + note.getContent() + ",created at " + note.getCreatedTime() +
                             ",deadline is " + note.getDeadline() + " , isNotice is " + note.isNotice() + " , isFinished is " +
                             note.isFinished() + " , importance level is " + note.getImportance() + " , ID is " + note.getID());
-
+                    Log.i("getNotes()", "images string list: " + Arrays.toString(arrayList.toArray()));
+                    Log.i("getNotes()", "images uri list: " + Arrays.toString(note.getImagesUris().toArray()));
                 }
             }
             Log.i("vital", "getNotes() " + isFinished + " : return " + notes.size() + " notes");
@@ -165,7 +186,7 @@ public class DatabaseHelper {
         Cursor cursor = database.query(false, MySQLiteOpenHelper.TABLE_NAME_NOTES, new String[]{MySQLiteOpenHelper.COLUMN_ID},
                 MySQLiteOpenHelper.COLUMN_IS_FINISHED + " = ? ", new String[]{String.valueOf(0)}, null, null, null, null);//TODO
         Log.i("vital", "hasNotes() : cursor count = " + cursor.getCount());
-        boolean result = cursor.getCount()>0;
+        boolean result = cursor.getCount() > 0;
         cursor.close();
         database.close();
         return result;

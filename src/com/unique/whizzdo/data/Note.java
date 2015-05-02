@@ -1,11 +1,9 @@
 package com.unique.whizzdo.data;
 
 import android.net.Uri;
-import android.os.Parcel;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Carlos on 4/16/2014.
@@ -24,7 +22,7 @@ public class Note {
     private long mFinishedTime = 0;
     private long mDeadline = 0;
     private boolean isNotice = true;
-    private ArrayList<String> mImagesPaths = new ArrayList<String>();
+    private List<Uri> mImagesUris = new ArrayList<Uri>();
     //TODO  继续，完成build和数据库方法
 
     public int getID() {
@@ -93,8 +91,8 @@ public class Note {
         this.mImportance = importance;
     }
 
-    public ArrayList<String> getImagesPaths() {
-        return mImagesPaths;
+    public List<Uri> getImagesUris() {
+        return mImagesUris;
     }
 
     public void commit(DatabaseHelper helper) {
@@ -152,13 +150,12 @@ public class Note {
             return this;
         }
 
-        public Builder setImagePaths(ArrayList<String> list) {
+        public Builder setImageUris(List<Uri> list) {
             if (list != null) {
-                mCreated.mImagesPaths = list;
+                mCreated.mImagesUris = list;
             }
             return this;
         }
-
 
 
         public Note create() {

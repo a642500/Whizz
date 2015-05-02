@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
@@ -16,7 +18,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.unique.whizzdo.R;
 import com.unique.whizzdo.application.SettingsHelper;
@@ -25,10 +26,8 @@ import com.unique.whizzdo.data.Note;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -175,9 +174,9 @@ public class QuickSnapActivity extends Activity {
                                 bm.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
                                 outStream.close();
 
-                                ArrayList<String> path = new ArrayList<String>();
-                                path.add(file.getAbsolutePath());
-                                new Note.Builder().setImagePaths(path).setCreatedTime(System.currentTimeMillis()).create().commit(DatabaseHelper.getDatabaseHelper(QuickSnapActivity.this));
+                                ArrayList<Uri> uris = new ArrayList<Uri>();
+                                uris.add(galleryAddPic(file.getAbsolutePath()));
+                                new Note.Builder().setImageUris(uris).setCreatedTime(System.currentTimeMillis()).create().commit(DatabaseHelper.getDatabaseHelper(QuickSnapActivity.this));
                                 Toast.makeText(QuickSnapActivity.this, "图片已保存", Toast.LENGTH_SHORT).show();
                                 QuickSnapActivity.this.finish();
                             } catch (Exception e) {
@@ -193,5 +192,14 @@ public class QuickSnapActivity extends Activity {
             }
 
         }
+    }
+
+    private Uri galleryAddPic(String path) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(path);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+        return contentUri;
     }
 }

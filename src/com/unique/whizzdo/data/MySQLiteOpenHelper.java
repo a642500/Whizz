@@ -19,7 +19,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_IS_NOTICE = "is_notice";
     public static final String COLUMN_ID = "notesId";
     public static final String COLUMN_IMPORTANCE = "importance";
-    public static final String COLUMN_IMAGES_PATH = "image_paths";
+    public static final String COLUMN_IMAGES_URIS = "image_uris";
 
 
     public MySQLiteOpenHelper(Context context) {
@@ -30,7 +30,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String sql = "create table " + TABLE_NAME_NOTES + " ( " + " \"notesId\"  INTEGER PRIMARY KEY AUTOINCREMENT  , " + COLUMN_CONTENT + " ,  "
                 + COLUMN_CREATED_TIME + " , " + COLUMN_DEADLINE + " , " + COLUMN_IS_FINISHED + " , " + COLUMN_FINISHED_TIME
-                + " , " + COLUMN_IS_NOTICE + " , " + COLUMN_IMPORTANCE + " , " + COLUMN_IMAGES_PATH + " ) ;";
+                + " , " + COLUMN_IS_NOTICE + " , " + COLUMN_IMPORTANCE + " , " + COLUMN_IMAGES_URIS + " ) ;";
         Log.i("vital", "create table sql: " + sql);
         db.execSQL(sql);
 

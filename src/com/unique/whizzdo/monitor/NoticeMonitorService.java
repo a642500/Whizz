@@ -2,13 +2,12 @@ package com.unique.whizzdo.monitor;
 
 import android.app.Service;
 import android.content.*;
-import android.graphics.Point;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
-import android.view.WindowManager.LayoutParams;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.github.johnpersano.supertoasts.SuperToast;
@@ -86,7 +85,7 @@ public class NoticeMonitorService extends Service {
 
     private void setListeners() {
         final ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        Log.i("setListeners()","a OnPrimaryClipChangedListener() was added!");
+        Log.i("setListeners()", "a OnPrimaryClipChangedListener() was added!");
         clipboardManager.addPrimaryClipChangedListener(new ClipboardManager.OnPrimaryClipChangedListener() {
             @Override
             public void onPrimaryClipChanged() {
@@ -106,9 +105,9 @@ public class NoticeMonitorService extends Service {
                                 new Note.Builder().setContent(text.toString()).create().commit(DatabaseHelper.getDatabaseHelper(NoticeMonitorService.this));
                                 post(text.toString(), 3000, TEXT_WHITH_BUTTON_TOAST);
                             } else {
-                                ArrayList<String> arrayList = new ArrayList<String>();
-                                arrayList.add(text.toString());
-                                new Note.Builder().setImagePaths(arrayList).create().commit(DatabaseHelper.getDatabaseHelper(NoticeMonitorService.this));
+                                ArrayList<Uri> arrayList = new ArrayList<Uri>();
+                                arrayList.add(uri);
+                                new Note.Builder().setImageUris(arrayList).create().commit(DatabaseHelper.getDatabaseHelper(NoticeMonitorService.this));
                                 post(text.toString(), 3000, PICTURE_WHITH_BUTTON_TOAST);
                             }
 
@@ -156,7 +155,6 @@ public class NoticeMonitorService extends Service {
 //                params.width =  LayoutParams.WRAP_CONTENT;
 //                params.height = LayoutParams.WRAP_CONTENT;
 //                windowManager.addView(view, params);
-
 
 
                 break;

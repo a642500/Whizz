@@ -3,11 +3,13 @@ package com.unique.whizzdo;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.unique.whizzdo.data.DatabaseHelper;
 import com.unique.whizzdo.data.MySQLiteOpenHelper;
@@ -92,24 +94,24 @@ class MyListAdapter extends BaseAdapter {
 
         TextView tv = (TextView) convertView.findViewById(R.id.item_text);
         Note note = ((Note) getItem(position));
-        int size = note.getImagesPaths().size();
+        int size = note.getImagesUris().size();
         View view = null;
         if (size > 1) {
             view = mInflater.inflate(R.layout.two_image_layout, null);
             ImageView imageView1 = (ImageView) view.findViewById(R.id.image1);
-            imageView1.setTag(note.getImagesPaths().get(size - 1));
+            imageView1.setTag(note.getImagesUris().get(size - 1));
             imageView1.setClickable(false);
-            Picasso.with(mInflater.getContext()).load("file:" + note.getImagesPaths().get(size - 1)).error(R.drawable.load_image_error).into(imageView1);
+            Picasso.with(mInflater.getContext()).load(note.getImagesUris().get(size - 1)).error(R.drawable.load_image_error).into(imageView1);
             ImageView imageView2 = (ImageView) view.findViewById(R.id.image2);
-            imageView2.setTag(note.getImagesPaths().get(size - 2));
+            imageView2.setTag(note.getImagesUris().get(size - 2));
             imageView2.setClickable(false);
-            Picasso.with(mInflater.getContext()).load("file:" + note.getImagesPaths().get(size - 2)).error(R.drawable.load_image_error).into(imageView2);
+            Picasso.with(mInflater.getContext()).load(note.getImagesUris().get(size - 2)).error(R.drawable.load_image_error).into(imageView2);
         } else if (size == 1) {
             view = mInflater.inflate(R.layout.image_layout, null);
             ImageView imageView = (ImageView) view.findViewById(R.id.image);
-            imageView.setTag(note.getImagesPaths().get(size - 1));
+            imageView.setTag(note.getImagesUris().get(size - 1));
             imageView.setClickable(false);
-            Picasso.with(mInflater.getContext()).load("file:" + note.getImagesPaths().get(size - 1)).error(R.drawable.load_image_error).into(imageView);
+            Picasso.with(mInflater.getContext()).load(note.getImagesUris().get(size - 1)).error(R.drawable.load_image_error).into(imageView);
         }
 
         if (view != null) {
