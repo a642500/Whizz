@@ -18,12 +18,23 @@ import java.util.List;
 
 
 public class DatabaseHelper {
-    private ArrayList<DataChangedListener> mListeners;
-    private static DatabaseHelper mInstance;
-    private MySQLiteOpenHelper mHelper;
-
     public static final String DESC = "DESC";
     public static final String ASC = "ASC";
+    private static DatabaseHelper mInstance;
+    private ArrayList<DataChangedListener> mListeners;
+    private MySQLiteOpenHelper mHelper;
+
+    //隐藏的构造器
+    private DatabaseHelper(Context context) {
+        mHelper = new MySQLiteOpenHelper(context);
+    }
+
+    public static DatabaseHelper getDatabaseHelper(Context context) {
+        if (mInstance == null) {
+            mInstance = new DatabaseHelper(context);
+        }
+        return mInstance;
+    }
 
     private void notifyDataChanged() {
         Log.i("notifyDataChanged()", "Data changed ! Listener numbers is " + (mListeners != null ? mListeners.size() : 0));
@@ -110,14 +121,6 @@ public class DatabaseHelper {
         }
         return list;
     }
-
-    public static DatabaseHelper getDatabaseHelper(Context context) {
-        if (mInstance == null) {
-            mInstance = new DatabaseHelper(context);
-        }
-        return mInstance;
-    }
-
 
     /**
      * @param isFinished that you need to query.
@@ -207,11 +210,6 @@ public class DatabaseHelper {
                 DatabaseClose(database);
             }
         }
-    }
-
-    //隐藏的构造器
-    private DatabaseHelper(Context context) {
-        mHelper = new MySQLiteOpenHelper(context);
     }
 
 }
