@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import com.unique.whizzdo.application.MyApplication;
+
+import toxz.me.whizz.application.MyApplication;
+
 
 /**
  * Created by Carlos on 4/16/2014.

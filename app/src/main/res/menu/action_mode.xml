@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
 
@@ -10,7 +11,7 @@
             android:icon="@drawable/action_mode_finish"
             android:title="完成"
             android:showAsAction="always"
-            />
+                />
 
     <item
             android:id="@+id/actionMode_delete"
@@ -28,9 +29,10 @@
 
     <item
             android:id="@+id/actionMode_share"
-            android:icon="@drawable/icon_light_share"
+            android:icon="@drawable/icon_short_cut_new_text_note"
             android:title="分享"
             android:showAsAction="never"
             />
+    <!--add share icon here-->
 
 </menu>

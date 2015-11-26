@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.unique.whizzdo.application.MyApplication;
-import com.unique.whizzdo.application.ShortCutCreator;
+
+import toxz.me.whizz.application.MyApplication;
+import toxz.me.whizz.application.ShortCutCreator;
 
 /**
  * Created by carlos on 5/31/14.

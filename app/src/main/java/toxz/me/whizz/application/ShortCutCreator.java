@@ -3,10 +3,12 @@ package toxz.me.whizz.application;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import com.unique.whizzdo.MainActivity;
-import com.unique.whizzdo.R;
+
 
 import java.util.Locale;
+
+import toxz.me.whizz.MainActivity;
+import toxz.me.whizz.R;
 
 /**
  * Created by carlos on 5/31/14.

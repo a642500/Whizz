@@ -10,13 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.github.johnpersano.supertoasts.SuperToast;
-import com.unique.whizzdo.R;
-import com.unique.whizzdo.application.MyBinder;
-import com.unique.whizzdo.data.DatabaseHelper;
-import com.unique.whizzdo.data.Note;
 
 import java.util.ArrayList;
+
+import toxz.me.whizz.R;
+import toxz.me.whizz.application.MyBinder;
+import toxz.me.whizz.data.DatabaseHelper;
+import toxz.me.whizz.data.Note;
 
 /**
  * Created by Carlos on 4/16/2014.
@@ -127,45 +127,46 @@ public class NoticeMonitorService extends Service {
     public static final int PICTURE_WHITH_BUTTON_TOAST = 2;
 
     public void post(String text, int time, int kind) {
-        SuperToast superToast;
-        switch (kind) {
-            case TEXT_WHITH_BUTTON_TOAST:
-                Toast toast = new Toast(this);
-                LayoutInflater inflater = LayoutInflater.from(this);
-                View view = inflater.inflate(R.layout.toast_with_button, null);
-                ((TextView) view.findViewById(R.id.toast_text)).setText(text);
-                view.findViewById(R.id.toast_button).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-
-                    }
-                });
-                view.setFocusable(true);
-                toast.setView(view);
-                toast.setDuration(time);
-                toast.show();
-
-
+        Toast.makeText(this,text,time).show();
+//        SuperToast superToast;
+//        switch (kind) {
+//            case TEXT_WHITH_BUTTON_TOAST:
+//                Toast toast = new Toast(this);
+//                LayoutInflater inflater = LayoutInflater.from(this);
+//                View view = inflater.inflate(R.layout.toast_with_button, null);
+//                ((TextView) view.findViewById(R.id.toast_text)).setText(text);
+//                view.findViewById(R.id.toast_button).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
 //
-//                WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-//                Point point = new Point();
-//                windowManager.getDefaultDisplay().getSize(point);
-//                WindowManager.LayoutParams params = new WindowManager.LayoutParams(LayoutParams.TYPE_PHONE, LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-//                params.width =  LayoutParams.WRAP_CONTENT;
-//                params.height = LayoutParams.WRAP_CONTENT;
-//                windowManager.addView(view, params);
-
-
-                break;
-            case PICTURE_WHITH_BUTTON_TOAST:
-                break;
-            default:
-                superToast = SuperToast.create(this, text, time);
-                superToast.setBackground(R.drawable.toast_background);
-                superToast.setAnimations(SuperToast.Animations.POPUP);
-                superToast.show();
-        }
+//
+//                    }
+//                });
+//                view.setFocusable(true);
+//                toast.setView(view);
+//                toast.setDuration(time);
+//                toast.show();
+//
+//
+////
+////                WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+////                Point point = new Point();
+////                windowManager.getDefaultDisplay().getSize(point);
+////                WindowManager.LayoutParams params = new WindowManager.LayoutParams(LayoutParams.TYPE_PHONE, LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+////                params.width =  LayoutParams.WRAP_CONTENT;
+////                params.height = LayoutParams.WRAP_CONTENT;
+////                windowManager.addView(view, params);
+//
+//
+//                break;
+//            case PICTURE_WHITH_BUTTON_TOAST:
+//                break;
+//            default:
+//                superToast = SuperToast.create(this, text, time);
+//                superToast.setBackground(R.drawable.toast_background);
+//                superToast.setAnimations(SuperToast.Animations.POPUP);
+//                superToast.show();
+//        }
 
 
     }

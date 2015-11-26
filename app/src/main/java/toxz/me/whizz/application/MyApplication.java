@@ -7,11 +7,13 @@ import android.graphics.Point;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.WindowManager;
-import com.unique.whizzdo.additional.QuickSnapService;
-import com.unique.whizzdo.monitor.NoticeMonitorService;
+
 
 import java.util.List;
 import java.util.Random;
+
+import toxz.me.whizz.additional.QuickSnapService;
+import toxz.me.whizz.monitor.NoticeMonitorService;
 
 
 /**

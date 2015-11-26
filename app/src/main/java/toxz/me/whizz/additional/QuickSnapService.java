@@ -15,9 +15,8 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-import com.unique.whizzdo.application.MyBinder;
-import android.view.WindowManager.LayoutParams;
-import org.jetbrains.annotations.Nullable;
+
+import toxz.me.whizz.application.MyBinder;
 
 /**
  * Created by carlos on 6/3/14.
@@ -113,8 +112,7 @@ public class QuickSnapService extends Service implements SensorEventListener {
     }
 
 
-    @Nullable
-    @Override
+        @Override
     public IBinder onBind(Intent intent) {
         return new MyBinder(this);
     }

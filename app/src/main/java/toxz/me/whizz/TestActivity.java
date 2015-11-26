@@ -8,9 +8,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import com.unique.whizzdo.application.MyApplication;
-import com.unique.whizzdo.application.SettingsHelper;
-import com.unique.whizzdo.monitor.NoticeMonitorService;
+
+import toxz.me.whizz.application.MyApplication;
+import toxz.me.whizz.application.SettingsHelper;
+import toxz.me.whizz.monitor.NoticeMonitorService;
 
 /**
  * Created by carlos on 5/31/14.

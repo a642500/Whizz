@@ -11,14 +11,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
-import com.unique.whizzdo.data.DatabaseHelper;
-import com.unique.whizzdo.data.MySQLiteOpenHelper;
-import com.unique.whizzdo.data.Note;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import toxz.me.whizz.data.DatabaseHelper;
+import toxz.me.whizz.data.MySQLiteOpenHelper;
+import toxz.me.whizz.data.Note;
 
 /**
  * Created by carlos on 5/28/14.

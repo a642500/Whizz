@@ -19,16 +19,18 @@ import android.view.SurfaceView;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
-import com.unique.whizzdo.R;
-import com.unique.whizzdo.application.SettingsHelper;
-import com.unique.whizzdo.data.DatabaseHelper;
-import com.unique.whizzdo.data.Note;
+
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import toxz.me.whizz.R;
+import toxz.me.whizz.application.SettingsHelper;
+import toxz.me.whizz.data.DatabaseHelper;
+import toxz.me.whizz.data.Note;
 
 /**
  * Created by carlos on 6/5/14.

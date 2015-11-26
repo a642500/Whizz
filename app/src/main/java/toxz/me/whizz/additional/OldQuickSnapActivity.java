@@ -11,13 +11,14 @@ import android.util.Log;
 import android.view.*;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import com.unique.whizzdo.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import toxz.me.whizz.R;
 
 /**
  * This file was deprecated.

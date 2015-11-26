@@ -4,7 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import com.unique.whizzdo.application.MyApplication;
+
+import toxz.me.whizz.application.MyApplication;
+
 
 /**
  * 这个类会读取账户名并打开相应的数据库，初始化表

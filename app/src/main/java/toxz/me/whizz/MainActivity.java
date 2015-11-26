@@ -12,18 +12,19 @@ import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.squareup.picasso.Picasso;
-import com.unique.whizzdo.application.MyApplication;
-import com.unique.whizzdo.application.ShortCutCreator;
-import com.unique.whizzdo.data.DataChangedListener;
-import com.unique.whizzdo.data.DatabaseHelper;
-import com.unique.whizzdo.data.Note;
-import com.unique.whizzdo.monitor.NoticeMonitorService;
 import com.viewpagerindicator.UnderlinePageIndicator;
-import de.timroes.android.listview.EnhancedListView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.timroes.android.listview.EnhancedListView;
+import toxz.me.whizz.application.MyApplication;
+import toxz.me.whizz.application.ShortCutCreator;
+import toxz.me.whizz.data.DataChangedListener;
+import toxz.me.whizz.data.DatabaseHelper;
+import toxz.me.whizz.data.Note;
+import toxz.me.whizz.monitor.NoticeMonitorService;
 
 import static android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
