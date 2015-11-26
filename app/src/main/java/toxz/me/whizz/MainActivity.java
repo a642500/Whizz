@@ -12,7 +12,7 @@ import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import com.squareup.picasso.Picasso;
-import com.viewpagerindicator.UnderlinePageIndicator;
+
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -138,11 +138,11 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
         /* show indicator on action bar */
         View customActionBarView = mInflater.inflate(R.layout.custom_action_bar, null);
         assert customActionBarView != null;
-        UnderlinePageIndicator pagerIndicator = (UnderlinePageIndicator) customActionBarView.findViewById(R.id.pageIndicator);
-        pagerIndicator.setSelectedColor(getResources().getColor(R.color.item_background));
-        pagerIndicator.setFades(false);
-        pagerIndicator.setViewPager(mViewPager);
-        pagerIndicator.setOnPageChangeListener(this);
+//        UnderlinePageIndicator pagerIndicator = (UnderlinePageIndicator) customActionBarView.findViewById(R.id.pageIndicator);
+//        pagerIndicator.setSelectedColor(getResources().getColor(R.color.item_background));
+//        pagerIndicator.setFades(false);
+//        pagerIndicator.setViewPager(mViewPager);
+//        pagerIndicator.setOnPageChangeListener(this);
 
 
         ActionBar actionBar = getActionBar();
