@@ -104,7 +104,8 @@ public class MyApplication extends Application {
 
 
         private void startNoticeService() {
-            Intent intent = new Intent("com.unique.whizzdo.notice.NoticeMonitorService");
+            Intent intent = new Intent(MyApplication.this,NoticeMonitorService.class);
+        //    Intent intent = new Intent("com.unique.whizzdo.notice.NoticeMonitorService");
             startService(intent);
             bindService(intent, new ServiceConnection() {
                 @Override
@@ -120,7 +121,8 @@ public class MyApplication extends Application {
         }
 
         private void startQuickSnapService() {
-            Intent intent = new Intent("com.unique.whizzdo.additional.QuickSnapService");
+            Intent intent = new Intent(MyApplication.this,QuickSnapService.class);
+            // Intent intent = new Intent("com.unique.whizzdo.additional.QuickSnapService");
             startService(intent);
             bindService(intent, new ServiceConnection() {
                 @Override
