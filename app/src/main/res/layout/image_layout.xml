@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/pic_height">
+    <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pic_height"
+            android:src="@drawable/ic_launcher"
+            android:onClick="onClick"
+            android:longClickable="false"
+            android:scaleType="centerCrop"/>
+
+</LinearLayout>

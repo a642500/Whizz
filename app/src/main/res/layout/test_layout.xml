@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <EditText
+            android:id="@+id/editText"
+            android:hint="text"
+            android:text="xxx"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    <EditText
+            android:id="@+id/editText_time"
+            android:text="3000"
+            android:hint="time"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    <Button android:onClick="onClick" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="开始"/>
+    <Button android:onClick="onClick" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="特殊"/>
+    <CheckBox
+            android:id="@+id/flash_light_checkBox"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="闪光灯"/>
+</LinearLayout>
