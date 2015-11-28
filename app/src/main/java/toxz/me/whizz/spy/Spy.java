@@ -1,6 +1,7 @@
 package toxz.me.whizz.spy;
 
-import java.io.OutputStream;
+import com.squareup.okhttp.RequestBody;
+
 import java.util.List;
 
 /**
@@ -12,9 +13,7 @@ public interface Spy {
     void registerSpyListener(OnNewSwagListener listener);
 
     interface Swag {
-        OutputStream getContent();
-
-        String getContentType();
+        RequestBody getContent();
 
         long getContentTime();
     }

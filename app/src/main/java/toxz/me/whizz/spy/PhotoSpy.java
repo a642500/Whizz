@@ -1,6 +1,9 @@
 package toxz.me.whizz.spy;
 
-import java.io.OutputStream;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
+
+import java.io.File;
 import java.util.List;
 
 /**
@@ -19,16 +22,16 @@ public class PhotoSpy implements Spy {
 
     }
 
-    public class Photo implements Spy.Swag {
+    public static class Photo implements Spy.Swag {
         private final long mTime = System.currentTimeMillis();
+        private final File mFile;
 
-        public OutputStream getContent() {
-            return null;
+        public Photo(File file) {
+            this.mFile = file;
         }
 
-        @Override
-        public String getContentType() {
-            return "image/*";
+        public RequestBody getContent() {
+            return RequestBody.create(MediaType.parse("image/*"), mFile);
         }
 
         public long getContentTime() {
