@@ -158,14 +158,14 @@ public class DatabaseHelper {
                             .create();
                     notes.add(note);
 
-                    Log.i("getNotes()", "note  is " + note.getContent() + ",created at " + note.getCreatedTime() +
+                    Log.v("getNotes()", "note  is " + note.getContent() + ",created at " + note.getCreatedTime() +
                             ",deadline is " + note.getDeadline() + " , isNotice is " + note.isNotice() + " , isFinished is " +
                             note.isFinished() + " , importance level is " + note.getImportance() + " , ID is " + note.getID());
-                    Log.i("getNotes()", "images string list: " + Arrays.toString(arrayList.toArray()));
-                    Log.i("getNotes()", "images uri list: " + Arrays.toString(note.getImagesUris().toArray()));
+                    Log.v("getNotes()", "images string list: " + Arrays.toString(arrayList.toArray()));
+                    Log.v("getNotes()", "images uri list: " + Arrays.toString(note.getImagesUris().toArray()));
                 }
             }
-            Log.i("vital", "getNotes() " + isFinished + " : return " + notes.size() + " notes");
+            Log.v("vital", "getNotes() " + isFinished + " : return " + notes.size() + " notes");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
