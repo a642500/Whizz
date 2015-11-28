@@ -32,7 +32,7 @@ public class QuickSnapService extends Service implements SensorEventListener {
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i("onReceiver()", "receiver a broadcast screen on");
+            Log.v("onReceiver()", "receiver a broadcast screen on");
             handleBroadcastReceiver();
         }
     };

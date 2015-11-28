@@ -31,7 +31,7 @@ public class NoticeMonitorService extends Service {
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i("onReceiver()", "receiver a broadcast");
+            Log.v("onReceiver()", "receiver a broadcast");
             handleBroadcastReceiver(context, intent);
         }
     };
