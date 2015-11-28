@@ -2,18 +2,20 @@ package toxz.me.whizz.application;
 
 import android.app.ActivityManager;
 import android.app.Application;
-import android.content.*;
-import android.graphics.Point;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.WindowManager;
-
 
 import java.util.List;
 import java.util.Random;
 
 import toxz.me.whizz.additional.QuickSnapService;
 import toxz.me.whizz.monitor.NoticeMonitorService;
+import toxz.me.whizz.server.Server;
 
 
 /**
@@ -24,6 +26,7 @@ public class MyApplication extends Application {
     private Initiator mInitiator = new Initiator();
     private NoticeMonitorService mNoticeMonitorService;
     private QuickSnapService mQuickSnapService;
+    private Server mServer;
 
     @Override
     public void onTerminate() {
@@ -75,7 +78,9 @@ public class MyApplication extends Application {
                 startNoticeService();
             if (!checker.isServiceRunning(QuickSnapService.class.getName()))
                 startQuickSnapService();
-
+            if (!checker.isServiceRunning(Server.class.getName())) {
+                startServerService();
+            }
         }
 
 
@@ -132,6 +137,22 @@ public class MyApplication extends Application {
 
                 @Override
                 public void onServiceDisconnected(ComponentName name) {
+                }
+            }, BIND_AUTO_CREATE);
+        }
+
+        private void startServerService() {
+            Intent intent = new Intent(MyApplication.this, Server.class);
+            startService(intent);
+            bindService(intent, new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    mServer = (Server) ((MyBinder) service).getService();
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    mServer = null;
                 }
             }, BIND_AUTO_CREATE);
         }
