@@ -66,6 +66,9 @@
                 <action android:name="com.unique.whizzdo.additional.QuickSnapService"/>
             </intent-filter>
         </service>
+        <service android:name=".server.Server">
+
+        </service>
 
     </application>
 
