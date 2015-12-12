@@ -49,7 +49,7 @@ public class NoticeMonitorService extends Service {
         }
         if (intent.getCategories() != null) {
             for (String s : intent.getCategories()) {
-//                post(s, 2000);
+//                post(s, 2000);1
             }
         }
     }
