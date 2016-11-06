@@ -27,8 +27,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
@@ -75,11 +73,6 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
     private ActionMode mActionMode = null;
     private int mImageContainerWidth = 0, mImageHeight = 0, mCurrentPage = 0;
     private boolean isEdit = false;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     /**
      * Called when the activity is first created.
@@ -110,9 +103,6 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             }
 
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
