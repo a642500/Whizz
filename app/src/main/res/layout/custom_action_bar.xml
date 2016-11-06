@@ -1,47 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical">
 
 
     <LinearLayout
-            android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingRight="10dp">
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:gravity="center"
-            android:paddingRight="10dp"
-            android:layout_alignParentRight="true">
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                      android:orientation="horizontal" android:gravity="center" android:layout_gravity="right">
+            android:orientation="horizontal">
 
-            <ImageButton android:layout_width="0dp"
-                         android:layout_weight="1"
-                         android:minWidth="48dp"
-                         android:layout_height="wrap_content"
-                         android:id="@+id/action_bar_item_list"
-                         android:src="@drawable/action_bar_list"
-                         android:onClick="onClick"
-                         android:background="@android:color/transparent"/>
-            <ImageButton android:layout_width="0dp"
-                         android:layout_weight="1"
-                         android:minWidth="48dp"
-                         android:layout_height="wrap_content"
-                         android:id="@+id/action_bar_item_add_note"
-                         android:src="@drawable/action_bar_add_note"
-                         android:onClick="onClick"
-                         android:background="@android:color/transparent"/>
+            <ImageButton
+                android:id="@+id/action_bar_item_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:minWidth="48dp"
+                android:onClick="onClick"
+                android:src="@drawable/action_bar_list" />
+
+            <ImageButton
+                android:id="@+id/action_bar_item_add_note"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:minWidth="48dp"
+                android:onClick="onClick"
+                android:src="@drawable/action_bar_add_note" />
         </LinearLayout>
-        <!--<com.viewpagerindicator.UnderlinePageIndicator
-                android:id="@+id/pageIndicator"
-                android:layout_width="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_height="2dp"
-                android:layout_marginBottom="3dp"
-                android:fadeScrollbars="false"
-                android:background="@android:color/transparent"/>-->
+
+        <com.viewpagerindicator.UnderlinePageIndicator
+            android:id="@+id/pageIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="3dp"
+            android:background="@android:color/transparent"
+            android:fadeScrollbars="false" />
     </LinearLayout>
 
 </RelativeLayout>

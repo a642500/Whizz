@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+
 import com.squareup.picasso.Picasso;
+import com.viewpagerindicator.UnderlinePageIndicator;
 
 
 import java.text.SimpleDateFormat;
@@ -29,7 +32,7 @@ import toxz.me.whizz.monitor.NoticeMonitorService;
 import static android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
 
-public class MainActivity extends Activity implements DataChangedListener, ViewPager.OnPageChangeListener,
+public class MainActivity extends AppCompatActivity implements DataChangedListener, ViewPager.OnPageChangeListener,
         ActionMode.Callback, View.OnClickListener {
 
     public static final int REQUEST_CODE_IMAGE_PICK = 1;
@@ -135,17 +138,20 @@ public class MainActivity extends Activity implements DataChangedListener, ViewP
         mViewPager.setAdapter(new MyPagerAdapter(mPagers));
 
 
+        setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolbar));
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+
+
         /* show indicator on action bar */
         View customActionBarView = mInflater.inflate(R.layout.custom_action_bar, null);
         assert customActionBarView != null;
-//        UnderlinePageIndicator pagerIndicator = (UnderlinePageIndicator) customActionBarView.findViewById(R.id.pageIndicator);
-//        pagerIndicator.setSelectedColor(getResources().getColor(R.color.item_background));
-//        pagerIndicator.setFades(false);
-//        pagerIndicator.setViewPager(mViewPager);
-//        pagerIndicator.setOnPageChangeListener(this);
+        UnderlinePageIndicator pagerIndicator = (UnderlinePageIndicator) customActionBarView.findViewById(R.id.pageIndicator);
+        pagerIndicator.setSelectedColor(getResources().getColor(R.color.item_background));
+        pagerIndicator.setFades(false);
+        pagerIndicator.setViewPager(mViewPager);
+        pagerIndicator.setOnPageChangeListener(this);
 
 
-        ActionBar actionBar = getActionBar();
         assert actionBar != null;
         actionBar.setIcon(R.drawable.logo_whizzdo);
         actionBar.setTitle(null);
