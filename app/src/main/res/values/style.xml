@@ -3,6 +3,7 @@
 
     <style name="MyTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/action_bar</item>
+        <item name="colorPrimaryDark">@color/action_bar_dark</item>
         <item name="colorAccent">@color/action_mode_background</item>
         <item name="android:textColor">@color/text_color</item>
         <item name="android:actionModeStyle">@android:style/Widget.Holo.ActionMode</item>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="action_bar">#ff3300</color>
+    <color name="action_bar_dark">#a92200</color>
     <color name="action_mode_background">#6699ff</color>
 
     <color name="line_urgency">#ff3300</color>
