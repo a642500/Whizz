@@ -22,7 +22,7 @@ public class Note {
     private long mFinishedTime = 0;
     private long mDeadline = 0;
     private boolean isNotice = true;
-    private List<Uri> mImagesUris = new ArrayList<Uri>();
+    private List<Uri> mImagesUris = new ArrayList<>();
     //TODO  继续，完成build和数据库方法
 
     public int getID() {

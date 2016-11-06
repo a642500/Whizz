@@ -1,11 +1,14 @@
 package toxz.me.whizz;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -24,6 +27,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
@@ -61,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
     private TextView mCreatedTimeText;
     private String mTempText = "";
     private LinearLayout mImageContainer;
-    private ArrayList<Note> mCheckedItem = new ArrayList<Note>();
-    private ArrayList<String> mImagePaths = new ArrayList<String>();
+    private ArrayList<Note> mCheckedItem = new ArrayList<>();
+    private ArrayList<String> mImagePaths = new ArrayList<>();
     /**
      * Note mCurrent is used to contain temp data, null when create a new note.
      */
@@ -70,6 +75,11 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
     private ActionMode mActionMode = null;
     private int mImageContainerWidth = 0, mImageHeight = 0, mCurrentPage = 0;
     private boolean isEdit = false;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     /**
      * Called when the activity is first created.
@@ -100,6 +110,9 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             }
 
         }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -136,20 +149,19 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
     private void init() {
         mInflater = getLayoutInflater();
 
-        setTheme(R.style.MyTheme);
         setContentView(R.layout.main);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
          /* initViewPager */
-        List<View> mPagers = new ArrayList<View>();
+        List<View> mPagers = new ArrayList<>();
         mPagers.add(initMainPager());
         mPagers.add(initAddNotePager());
         mViewPager = (ViewPager) findViewById(R.id.mainViewpager);
         mViewPager.setAdapter(new MyPagerAdapter(mPagers));
 
 
-        setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolbar));
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        ActionBar actionBar = getSupportActionBar();
 
 
         /* show indicator on action bar */
@@ -177,8 +189,10 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
     /* call by init() */
     private View initMainPager() {
+        @SuppressLint("InflateParams")
         View itemListPager = mInflater.inflate(R.layout.item_list_pager, null);
         assert itemListPager != null;
+
         mMainList = (EnhancedListView) itemListPager.findViewById(R.id.main_list);
         mNoNote = itemListPager.findViewById(R.id.no_note);
         mMainList.setDivider(getResources().getDrawable(R.drawable.line_divider));
@@ -191,10 +205,11 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                     mViewPager.setCurrentItem(1, true);
                     onScrollPage(SCROLL_FLAG_FROM_ONE_TO_TWO);
                 } else {
-                    if (mCheckedItem.contains(view.getTag())) {
+                    final Note note = (Note) view.getTag();
+                    if (mCheckedItem.contains(note)) {
                         view.setBackgroundResource(R.color.main_background);
                         Log.i("onItemClick()", "item " + position + " is removed from ArrayList");
-                        mCheckedItem.remove(view.getTag());
+                        mCheckedItem.remove(note);
 
                     } else {
                         view.setBackgroundResource(R.color.selected_background);
@@ -267,8 +282,12 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
         mDaySpinner = (Spinner) mNewItemPager.findViewById(R.id.day_spinner);
         mTimeSpinner = (Spinner) mNewItemPager.findViewById(R.id.time_spinner);
-        mDaySpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"今天", "明天", "选择日期..."}));
-        mTimeSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"早上08：00", "下午13：00", "晚上17：00", "夜间20：00", "选择时刻..."}));
+        mDaySpinner.setAdapter(
+                new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                        new String[]{"今天", "明天", "选择日期..."}));
+        mTimeSpinner.setAdapter(
+                new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                        new String[]{"早上08：00", "下午13：00", "晚上17：00", "夜间20：00", "选择时刻..."}));
 
         refreshNotePager();
         return mNewItemPager;
@@ -307,7 +326,10 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
 //                        Bitmap bitmap1 = BitmapFactory.decodeFile(mCurrentNote.getImagesUris().get(i));
 //                        imageView1.setImageBitmap(bitmap1);
-                        Picasso.with(MainActivity.this).load(mCurrentNote.getImagesUris().get(i)).error(R.drawable.ic_launcher).into(imageView1);
+                        Picasso.with(MainActivity.this)
+                                .load(mCurrentNote.getImagesUris().get(i))
+                                .error(R.drawable.ic_launcher)
+                                .into(imageView1);
 
                         Log.i("refreshNotePager()", "kind 2 was created ! i=" + (i + 1));
                         ImageView imageView2 = (ImageView) linearLayout.findViewById(R.id.image2);
@@ -315,7 +337,10 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
 //                        Bitmap bitmap2 = BitmapFactory.decodeFile(mCurrentNote.getImagesUris().get(i + 1));
 //                        imageView2.setImageBitmap(bitmap2);
-                        Picasso.with(MainActivity.this).load(mCurrentNote.getImagesUris().get(i + 1)).error(R.drawable.ic_launcher).into(imageView2);
+                        Picasso.with(MainActivity.this)
+                                .load(mCurrentNote.getImagesUris().get(i + 1))
+                                .error(R.drawable.ic_launcher)
+                                .into(imageView2);
                     }
                     mImageContainer.addView(linearLayout);
                 }
@@ -441,7 +466,11 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                     Toast.makeText(MainActivity.this, "空白记事，已舍弃", Toast.LENGTH_SHORT).show();
                 else {
                     if (mCurrentNote == null) {
-                        mCurrentNote = new Note.Builder().setNotice(true).setContent(note).setCreatedTime(System.currentTimeMillis()).setImportance(importance).create();
+                        mCurrentNote = new Note.Builder()
+                                .setNotice(true)
+                                .setContent(note)
+                                .setCreatedTime(System.currentTimeMillis())
+                                .setImportance(importance).create();
                     } else {
                         if (mCurrentNote.getID() == -1) {
                             mCurrentNote.setCreatedTime(System.currentTimeMillis());
