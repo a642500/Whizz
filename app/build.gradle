@@ -1,18 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
 
     defaultConfig {
         applicationId "toxz.me.whizz"
         minSdkVersion 17
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
-        debug{
+        debug {
             minifyEnabled false
         }
         release {
@@ -25,10 +25,17 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile ('com.android.support:appcompat-v7:23.1.1')
-    compile ('com.squareup.picasso:picasso:2.5.2')
-    compile ('com.nineoldandroids:library:2.4.0')
-    compile ('com.android.support:design:23.1.1')
-    compile ('com.android.support:support-annotations:23.1.1')
-    compile ('de.timroes.android:EnhancedListView:0.3.4')
+    compile('com.android.support:appcompat-v7:23.1.1')
+    compile('com.squareup.picasso:picasso:2.5.2')
+    compile('com.nineoldandroids:library:2.4.0')
+    compile('com.android.support:design:23.1.1')
+    compile('com.android.support:support-annotations:23.1.1')
+    compile('de.timroes.android:EnhancedListView:0.3.4')
+}
+
+repositories {
+    maven { url "https://jitpack.io" }
+}
+dependencies {
+    compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
 }
