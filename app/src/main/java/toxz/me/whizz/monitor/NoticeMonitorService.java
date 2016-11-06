@@ -1,19 +1,23 @@
 package toxz.me.whizz.monitor;
 
 import android.app.Service;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.IBinder;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import toxz.me.whizz.R;
 import toxz.me.whizz.application.MyBinder;
 import toxz.me.whizz.data.DatabaseHelper;
 import toxz.me.whizz.data.Note;
@@ -87,6 +91,7 @@ public class NoticeMonitorService extends Service {
         final ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         Log.i("setListeners()", "a OnPrimaryClipChangedListener() was added!");
         clipboardManager.addPrimaryClipChangedListener(new ClipboardManager.OnPrimaryClipChangedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onPrimaryClipChanged() {
                 Log.i("onPrimaryClipChanged()", "listen !");
@@ -98,6 +103,7 @@ public class NoticeMonitorService extends Service {
                     if (item != null) {
                         CharSequence text = item.getText();
                         Uri uri = item.getUri();
+                        //TODO need API 16
                         CharSequence htmlText = item.getHtmlText();
                         Log.i("onPrimaryClipChanged()", "clipdata text: " + text + " uri: " + uri + " htmlText: " + htmlText + " intent: " + item.getIntent());
                         if (text != null) {
@@ -105,9 +111,11 @@ public class NoticeMonitorService extends Service {
                                 new Note.Builder().setContent(text.toString()).create().commit(DatabaseHelper.getDatabaseHelper(NoticeMonitorService.this));
                                 post(text.toString(), 3000, TEXT_WHITH_BUTTON_TOAST);
                             } else {
-                                ArrayList<Uri> arrayList = new ArrayList<Uri>();
-                                arrayList.add(uri);
-                                new Note.Builder().setImageUris(arrayList).create().commit(DatabaseHelper.getDatabaseHelper(NoticeMonitorService.this));
+                                List<String> list = Collections.singletonList(uri.toString());
+                                new Note.Builder()
+                                        .setImagesPath(list)
+                                        .create()
+                                        .commit(DatabaseHelper.getDatabaseHelper(NoticeMonitorService.this));
                                 post(text.toString(), 3000, PICTURE_WHITH_BUTTON_TOAST);
                             }
 
@@ -127,7 +135,7 @@ public class NoticeMonitorService extends Service {
     public static final int PICTURE_WHITH_BUTTON_TOAST = 2;
 
     public void post(String text, int time, int kind) {
-        Toast.makeText(this,text,time).show();
+        Toast.makeText(this, text, time).show();
 //        SuperToast superToast;
 //        switch (kind) {
 //            case TEXT_WHITH_BUTTON_TOAST:

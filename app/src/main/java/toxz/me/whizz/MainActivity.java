@@ -32,6 +32,7 @@ import com.viewpagerindicator.UnderlinePageIndicator;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.timroes.android.listview.EnhancedListView;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
     private String mTempText = "";
     private LinearLayout mImageContainer;
     private ArrayList<Note> mCheckedItem = new ArrayList<>();
-    private ArrayList<String> mImagePaths = new ArrayList<>();
+
     /**
      * Note mCurrent is used to contain temp data, null when create a new note.
      */
@@ -172,6 +173,18 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
 
         DatabaseHelper.getDatabaseHelper(getApplicationContext()).setDatabaseChangedListener(this);
+        initDao();
+    }
+
+//    DevOpen
+
+    private void initDao() {
+//        helper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
+//        db = helper.getWritableDatabase();
+//        daoMaster = new DaoMaster(db);
+//        daoSession = daoMaster.newSession();
+//// do this in your activities/fragments to get hold of a DAO
+//        noteDao = daoSession.getNoteDao();
     }
 
     private AdapterView.OnItemClickListener mListItemClickListener;
@@ -294,41 +307,41 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             mDaySpinner.setVisibility(View.GONE);
             mTimeSpinner.setVisibility(View.GONE);
         } else {
-            if (mCurrentNote.getImagesUris().size() > 0) {
+            if (mCurrentNote.getImagesPath().size() > 0) {
                 LinearLayout linearLayout;
-                Log.i("refreshNotePager()", "image path sizes: " + mCurrentNote.getImagesUris().size());
-                for (int i = 0; i < mCurrentNote.getImagesUris().size(); i += 2) {
-                    Log.i("load images", "Path is " + mCurrentNote.getImagesUris().get(i));
+                Log.i("refreshNotePager()", "image path sizes: " + mCurrentNote.getImagesPath().size());
+                for (int i = 0; i < mCurrentNote.getImagesPath().size(); i += 2) {
+                    Log.i("load images", "Path is " + mCurrentNote.getImagesPath().get(i));
                     Log.i("refreshNotePager()", "add pic  i = " + i);
-                    if (i == mCurrentNote.getImagesUris().size() - 1) {
+                    if (i == mCurrentNote.getImagesPath().size() - 1) {
                         Log.i("refreshNotePager()", "kind 1 was created ! ");
                         linearLayout = (LinearLayout) mInflater.inflate(R.layout.image_layout, null);
                         ImageView imageView = (ImageView) linearLayout.findViewById(R.id.image);
-                        imageView.setTag(mCurrentNote.getImagesUris().get(i));
-//                        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentNote.getImagesUris().get(i));
+                        imageView.setTag(mCurrentNote.getImagesPath().get(i));
+//                        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentNote.getImagesPath().get(i));
 //                        imageView.setImageBitmap(bitmap);
-                        Picasso.with(MainActivity.this).load(mCurrentNote.getImagesUris().get(i)).error(R.drawable.ic_launcher).into(imageView);
+                        Picasso.with(MainActivity.this).load(mCurrentNote.getImagesPath().get(i)).error(R.drawable.ic_launcher).into(imageView);
                     } else {
                         Log.i("refreshNotePager()", "kind 2 was created ! i=" + i);
                         linearLayout = (LinearLayout) mInflater.inflate(R.layout.two_image_layout, null);
                         ImageView imageView1 = (ImageView) linearLayout.findViewById(R.id.image1);
-                        imageView1.setTag(mCurrentNote.getImagesUris().get(i));
+                        imageView1.setTag(mCurrentNote.getImagesPath().get(i));
 
-//                        Bitmap bitmap1 = BitmapFactory.decodeFile(mCurrentNote.getImagesUris().get(i));
+//                        Bitmap bitmap1 = BitmapFactory.decodeFile(mCurrentNote.getImagesPath().get(i));
 //                        imageView1.setImageBitmap(bitmap1);
                         Picasso.with(MainActivity.this)
-                                .load(mCurrentNote.getImagesUris().get(i))
+                                .load(mCurrentNote.getImagesPath().get(i))
                                 .error(R.drawable.ic_launcher)
                                 .into(imageView1);
 
                         Log.i("refreshNotePager()", "kind 2 was created ! i=" + (i + 1));
                         ImageView imageView2 = (ImageView) linearLayout.findViewById(R.id.image2);
-                        imageView2.setTag(mCurrentNote.getImagesUris().get(i));
+                        imageView2.setTag(mCurrentNote.getImagesPath().get(i));
 
-//                        Bitmap bitmap2 = BitmapFactory.decodeFile(mCurrentNote.getImagesUris().get(i + 1));
+//                        Bitmap bitmap2 = BitmapFactory.decodeFile(mCurrentNote.getImagesPath().get(i + 1));
 //                        imageView2.setImageBitmap(bitmap2);
                         Picasso.with(MainActivity.this)
-                                .load(mCurrentNote.getImagesUris().get(i + 1))
+                                .load(mCurrentNote.getImagesPath().get(i + 1))
                                 .error(R.drawable.ic_launcher)
                                 .into(imageView2);
                     }
@@ -460,7 +473,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                                 .setNotice(true)
                                 .setContent(note)
                                 .setCreatedTime(System.currentTimeMillis())
-                                .setImportance(importance).create();
+                                .setImportance(importance)
+                                .create();
                     } else {
                         if (mCurrentNote.getID() == -1) {
                             mCurrentNote.setCreatedTime(System.currentTimeMillis());
@@ -475,7 +489,6 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                     refreshList();
                 }
 
-                mImagePaths.clear();
                 refreshNotePager();
                 break;
             default:
@@ -600,7 +613,15 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             if (mCurrentNote == null) {
                 mCurrentNote = new Note();
             }
-            mCurrentNote.getImagesUris().add(uri);
+
+            List<String> images = mCurrentNote.getImagesPath();
+            if (images == null) {
+                images = Collections.singletonList(uri.toString());
+            } else {
+                images = new ArrayList<>(images);
+                images.add(uri.toString());
+            }
+            mCurrentNote.setImagesPath(images);
             mCurrentNote.setContent(mTempText);
             refreshNotePager();
             mTempText = "";

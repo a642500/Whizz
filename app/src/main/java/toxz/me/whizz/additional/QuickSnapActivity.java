@@ -20,11 +20,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 import toxz.me.whizz.R;
@@ -176,9 +175,13 @@ public class QuickSnapActivity extends Activity {
                                 bm.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
                                 outStream.close();
 
-                                ArrayList<Uri> uris = new ArrayList<Uri>();
-                                uris.add(galleryAddPic(file.getAbsolutePath()));
-                                new Note.Builder().setImageUris(uris).setCreatedTime(System.currentTimeMillis()).create().commit(DatabaseHelper.getDatabaseHelper(QuickSnapActivity.this));
+
+                                Uri uri = galleryAddPic(file.getAbsolutePath());
+                                new Note.Builder()
+                                        .setImagesPath(Collections.singletonList(uri.toString()))
+                                        .setCreatedTime(System.currentTimeMillis())
+                                        .create()
+                                        .commit(DatabaseHelper.getDatabaseHelper(QuickSnapActivity.this));
                                 Toast.makeText(QuickSnapActivity.this, "图片已保存", Toast.LENGTH_SHORT).show();
                                 QuickSnapActivity.this.finish();
                             } catch (Exception e) {
