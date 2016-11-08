@@ -1,70 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/main_background">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_background">
 
 
     <LinearLayout
-            android:id="@+id/bottom_block"
-            android:layout_width="match_parent"
+        android:id="@+id/bottom_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_create_time"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_alignParentBottom="true"
-            >
-        <TextView android:id="@+id/tv_create_time"
-                  android:layout_gravity="right"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_margin="8dp"
-                  android:text="未设定时间" android:textColor="#bfbfbf"/>
+            android:layout_gravity="right"
+            android:layout_margin="8dp"
+            android:text="未设定时间"
+            android:textColor="#bfbfbf" />
 
 
-        <LinearLayout android:id="@+id/line_separate"
-                      android:layout_width="match_parent" android:layout_height="1dp"
-                      android:background="@color/line_separate" android:orientation="vertical"/>
-        <LinearLayout android:id="@+id/bottom_bar"
-                      android:layout_width="match_parent"
-                      android:layout_height="48dp"
-                      android:minHeight="48dp"
-                      android:orientation="horizontal"
-                      style="MyTheme.ButtonBarStyle">
+        <LinearLayout
+            android:id="@+id/line_separate"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_separate"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/bottom_bar"
+            style="MyTheme.ButtonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:minHeight="48dp"
+            android:orientation="horizontal">
 
 
-            <ImageButton android:id="@+id/bottom_bar_audio"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:src="@drawable/bottom_bar_add_voice"
-                         android:contentDescription="@string/new_note_add_voice_button_content_description"
-                         android:onClick="onClick"
-                         style="?android:buttonBarButtonStyle"
-                    />
-            <ImageButton android:id="@+id/bottom_bar_image"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:src="@drawable/bottom_bar_add_pic"
-                         android:contentDescription="@string/new_note_add_pic_button_content_description"
-                         android:onClick="onClick"
-                         style="?android:buttonBarButtonStyle"/>
+            <ImageButton
+                android:id="@+id/bottom_bar_audio"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/new_note_add_voice_button_content_description"
+                android:onClick="onClick"
+                android:src="@drawable/bottom_bar_add_voice"
+                android:visibility="gone" />
 
-            <ImageButton android:id="@+id/bottom_bar_notice"
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:src="@drawable/bottom_bar_notice_grey"
-                         android:contentDescription="@string/new_note_set_notice_button_content_description"
-                         android:onClick="onClick"
-                         style="?android:buttonBarButtonStyle"/>
-            <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/day_spinner"
-                    android:visibility="gone"/>
-            <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/time_spinner"
-                    android:visibility="gone"/>
+            <ImageButton
+                android:id="@+id/bottom_bar_image"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/new_note_add_pic_button_content_description"
+                android:onClick="onClick"
+                android:src="@drawable/bottom_bar_add_pic" />
+
+            <ImageButton
+                android:id="@+id/bottom_bar_notice"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/new_note_set_notice_button_content_description"
+                android:onClick="onClick"
+                android:src="@drawable/bottom_bar_notice_grey"
+                android:visibility="gone" />
+
+            <ButtonSpinner
+                android:id="@+id/bottom_bar_notice_spinner"
+                style="?android:buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!--<Spinner-->
+            <!--android:id="@+id/day_spinner"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone" />-->
+
+            <!--<Spinner-->
+            <!--android:id="@+id/time_spinner"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone" />-->
 
 
             <!--添加显示提醒的时间的文字-->
@@ -72,36 +92,39 @@
 
     </LinearLayout>
 
-    <ScrollView android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/new_item_scrollView"
-                android:layout_above="@id/bottom_block"
-                android:scrollbars="none"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-            >
-        <LinearLayout android:id="@+id/super_linear"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="vertical">
+    <ScrollView
+        android:id="@+id/new_item_scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_block"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/super_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
             <LinearLayout
-                    android:id="@+id/image_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="vertical">
+                android:id="@+id/image_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
 
             </LinearLayout>
 
-            <EditText android:id="@+id/et_input_note"
-                      android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:hint="@string/new_note_hint"
-                      android:gravity="start"
-                      android:inputType="textMultiLine"
-                      style="@style/MyTheme.MyEditText"
-                    />
+            <EditText
+                android:id="@+id/et_input_note"
+                style="@style/MyTheme.MyEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start"
+                android:hint="@string/new_note_hint"
+                android:inputType="textMultiLine" />
         </LinearLayout>
     </ScrollView>
 

@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">Whizz Do</string>
     <string name="new_note_hint">新建记事</string>
-    <string name="new_note_add_voice_button_content_description">添加图片</string>
-    <string name="new_note_add_pic_button_content_description">添加音频</string>
+    <string name="new_note_add_voice_button_content_description">添加音频</string>
+    <string name="new_note_add_pic_button_content_description">添加语音</string>
     <string name="new_note_set_notice_button_content_description">设置提醒</string>
     <string name="short_cut_name_new_text_note">新建记事</string>
 

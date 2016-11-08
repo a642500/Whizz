@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ButtonSpinner;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -283,14 +284,22 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         mNoticeSetButton = (ImageButton) mNewItemPager.findViewById(R.id.bottom_bar_notice);
         mCreatedTimeText = (TextView) mNewItemPager.findViewById(R.id.tv_create_time);
 
-        mDaySpinner = (Spinner) mNewItemPager.findViewById(R.id.day_spinner);
-        mTimeSpinner = (Spinner) mNewItemPager.findViewById(R.id.time_spinner);
+//        mDaySpinner = (Spinner) mNewItemPager.findViewById(R.id.day_spinner);
+//        mTimeSpinner = (Spinner) mNewItemPager.findViewById(R.id.time_spinner);
+        mDaySpinner = new Spinner(this);
+        mTimeSpinner = new Spinner(this);
         mDaySpinner.setAdapter(
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
                         new String[]{"今天", "明天", "选择日期..."}));
         mTimeSpinner.setAdapter(
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
                         new String[]{"早上08：00", "下午13：00", "晚上17：00", "夜间20：00", "选择时刻..."}));
+
+        ButtonSpinner spinner = (ButtonSpinner) mNewItemPager.findViewById(R.id.bottom_bar_notice_spinner);
+        spinner.setAdapter(
+                new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                        new String[]{"今天", "明天", "选择日期..."}));
+
 
         refreshNotePager();
         return mNewItemPager;
@@ -544,6 +553,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         mActionMode = null;
     }
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -557,6 +567,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                 startActivityForResult(new Intent(Intent.ACTION_PICK, EXTERNAL_CONTENT_URI), REQUEST_CODE_IMAGE_PICK);
                 break;
             case R.id.bottom_bar_notice:
+
                 //TODO set notice time  and save it into Note instance.
                 if (mDaySpinner.getVisibility() == View.VISIBLE) {
                     if (mCurrentNote != null)
