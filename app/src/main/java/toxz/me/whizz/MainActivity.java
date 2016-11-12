@@ -397,7 +397,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         return mNewItemPager;
     }
 
-    //TODO BUG 添加图片之后，textView文字消失
+    //TODO IMPROVE: when scroll between two page, disable the relayout of the first pager
+    //TODO pictures break down after restart app, maybe because permission, I believe copying a picture into our zoom can fix it.
     private void refreshNotePager() {
         mImageContainer.removeAllViews();
         /* what need to be refresh: image list , alarm color , time pick */
