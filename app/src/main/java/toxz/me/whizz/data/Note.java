@@ -1,7 +1,6 @@
 package toxz.me.whizz.data;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.greenrobot.greendao.annotation.Entity;
@@ -119,7 +118,7 @@ public class Note {
         this.mImportance = importance;
     }
 
-    @Nullable
+    @NonNull
     public List<String> getImagesPath() {
         if (mImagesPath == null) {
             return Collections.emptyList();
