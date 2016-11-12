@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 24
     buildToolsVersion "25.0.0"
 
     defaultConfig {
         applicationId "toxz.me.whizz"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
     }
@@ -39,6 +39,7 @@ dependencies {
     compile('com.nineoldandroids:library:2.4.0')
     compile('de.timroes.android:EnhancedListView:0.3.4')
     compile 'org.greenrobot:greendao:3.2.0'
+    compile 'com.code-troopers.betterpickers:library:3.0.1'
 }
 
 repositories {

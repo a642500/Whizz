@@ -28,13 +28,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment.OnDateSetListener;
 import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import de.timroes.android.listview.EnhancedListView;
 import toxz.me.whizz.application.MyApplication;
@@ -260,6 +264,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         return itemListPager;
     }
 
+    private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
+
     /**
      * refresh the list, data will refreshed.
      */
@@ -299,7 +305,40 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         spinner.setAdapter(
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
                         new String[]{"今天", "明天", "选择日期..."}));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position >= 2) {
+                    final Calendar cl = Calendar.getInstance(Locale.getDefault());
+                    new CalendarDatePickerDialogFragment()
+                            .setPreselectedDate(
+                                    cl.get(Calendar.YEAR)
+                                    , cl.get(Calendar.MONTH)
+                                    , cl.get(Calendar.DAY_OF_MONTH))
+                            .setOnDateSetListener(new OnDateSetListener() {
+                                @Override
+                                public void onDateSet(CalendarDatePickerDialogFragment dialog,
+                                                      int year, int monthOfYear, int dayOfMonth) {
+                                    cl.set(Calendar.YEAR, year);
+                                    cl.set(Calendar.MONTH, monthOfYear)
+                                    ;
+                                    cl.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
+                                    if (mCurrentNote == null) {
+                                        mCurrentNote = new Note();
+                                    }
+
+                                    mCurrentNote.setDeadline(cl.getTimeInMillis());
+                                }
+                            }).show(getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         refreshNotePager();
         return mNewItemPager;
