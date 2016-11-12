@@ -9,6 +9,7 @@ import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -121,7 +122,7 @@ public class Note {
     @Nullable
     public List<String> getImagesPath() {
         if (mImagesPath == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         final String[] s = TextUtils.split(mImagesPath, "_\uD83D\uDE02_");
