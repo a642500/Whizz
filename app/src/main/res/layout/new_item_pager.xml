@@ -76,6 +76,7 @@
                 android:visibility="gone" />
 
             <toxz.me.whizz.view.ProgressionDateSpinner
+                android:id="@+id/progressionDateSpinner"
                 style="?android:buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

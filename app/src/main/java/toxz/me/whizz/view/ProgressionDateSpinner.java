@@ -3,6 +3,7 @@ package toxz.me.whizz.view;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.view.menu.ShowableListMenu;
@@ -20,6 +22,7 @@ import android.support.v7.widget.TintTypedArray;
 import android.support.v7.widget.ViewUtils;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +34,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.SpinnerAdapter;
-import android.widget.Toast;
+
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -53,6 +57,12 @@ public class ProgressionDateSpinner extends ImageButton {
     private ForwardingListener mForwardingListener;
     private Context mPopupContext;
     private int mDropDownWidth;
+    private FragmentManager mSupportFragmentManager;
+
+    public void setSupportFragmentManager(FragmentManager fragmentManager) {
+        mSupportFragmentManager = fragmentManager;
+    }
+
 
     public ProgressionDateSpinner(Context context) {
         super(context);
@@ -325,8 +335,36 @@ public class ProgressionDateSpinner extends ImageButton {
                         setCalendar(calendar);
                     } else {
                         // TODO show dialog pick date
-
-                        Toast.makeText(getContext(), "Pick date", Toast.LENGTH_SHORT).show();
+                        if (mSupportFragmentManager != null) {
+                            new CalendarDatePickerDialogFragment()
+                                    .setThemeLight()
+                                    .setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
+                                        @Override
+                                        public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+                                            final Calendar calendar = Calendar.getInstance();
+                                            calendar.set(Calendar.DAY_OF_YEAR, year);
+                                            calendar.set(Calendar.MONTH, monthOfYear);
+                                            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                            if (!calendar.equals(getCalendar())) {
+                                                if (mSelectedListener != null) {
+                                                    mSelectedListener.onSelected(getProgressionAdapter().getLevel(calendar), calendar);
+                                                }
+                                            }
+                                            setCalendar(calendar);
+                                        }
+                                    })
+                                    .setOnDismissListener(new CalendarDatePickerDialogFragment.OnDialogDismissListener() {
+                                        @Override
+                                        public void onDialogDismiss(DialogInterface dialoginterface) {
+                                            if (mSelectedListener != null) {
+                                                mSelectedListener.onCancel();
+                                            }
+                                        }
+                                    })
+                                    .show(mSupportFragmentManager,
+                                            "ProgressionDateSpinnerDialog");
+                        }
+                        Log.e("ProgressionDateSpinner", "No supportFragmentManager set!");
                     }
                     dismiss();
                 }

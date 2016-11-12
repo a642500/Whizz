@@ -47,6 +47,7 @@ import toxz.me.whizz.data.DataChangedListener;
 import toxz.me.whizz.data.DatabaseHelper;
 import toxz.me.whizz.data.Note;
 import toxz.me.whizz.monitor.NoticeMonitorService;
+import toxz.me.whizz.view.ProgressionDateSpinner;
 
 import static android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
@@ -337,6 +338,39 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        ProgressionDateSpinner dateSpinner = (ProgressionDateSpinner) (mNewItemPager.findViewById(R.id.progressionDateSpinner));
+        dateSpinner.setSupportFragmentManager(getSupportFragmentManager());
+        dateSpinner.setOnSelectedListener(new ProgressionDateSpinner.OnSelectedListener() {
+            @Override
+            public void onSelected(ProgressionDateSpinner.ProgressionAdapter.Level level, Calendar cl) {
+                if (mCurrentNote == null) {
+                    mCurrentNote = new Note();
+                }
+                switch (level) {
+                    case HIGH:
+                        mCurrentNote.setImportance(Note.HIGH_IMPORTANCE);
+                        break;
+                    case MEDIUM:
+                        mCurrentNote.setImportance(Note.NORMAL_IMPORTANCE);
+                        break;
+                    case LOW:
+                        mCurrentNote.setImportance(Note.LOW_IMPORTANCE);
+                        break;
+                    default:
+                        mCurrentNote.setImportance(Note.NO_IMPORTANCE);
+                        break;
+                }
+
+                mCurrentNote.setDeadline(cl.getTimeInMillis());
+            }
+
+            @Override
+            public void onCancel() {
+                mCurrentNote.setDeadline(0);
+                mCurrentNote.setImportance(Note.NO_IMPORTANCE);
             }
         });
 
