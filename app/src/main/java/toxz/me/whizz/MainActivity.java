@@ -341,7 +341,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             }
         });
 
-        ProgressionDateSpinner dateSpinner = (ProgressionDateSpinner) (mNewItemPager.findViewById(R.id.progressionDateSpinner));
+        final TextView dateText = (TextView) mNewItemPager.findViewById(R.id.dateText);
+        final ProgressionDateSpinner dateSpinner = (ProgressionDateSpinner) (mNewItemPager.findViewById(R.id.progressionDateSpinner));
         dateSpinner.setSupportFragmentManager(getSupportFragmentManager());
         dateSpinner.setOnSelectedListener(new ProgressionDateSpinner.OnSelectedListener() {
             @Override
@@ -363,7 +364,22 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                         mCurrentNote.setImportance(Note.NO_IMPORTANCE);
                         break;
                 }
+                if (level == ProgressionDateSpinner.ProgressionAdapter.Level.LOW) {
+                    dateText.setVisibility(View.VISIBLE);
+                    String pattern;
 
+                    final Calendar today = Calendar.getInstance();
+//                    int delta = cl.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR);
+                    if (cl.get(Calendar.YEAR) != today.get(Calendar.YEAR)) {
+                        pattern = "YYYY年MM月dd日";
+                    } else {
+                        pattern = "MM月dd日";
+                    }
+
+                    dateText.setText(new SimpleDateFormat(pattern, Locale.getDefault()).format(cl.getTime()));
+                } else {
+                    dateText.setVisibility(View.INVISIBLE);
+                }
                 mCurrentNote.setDeadline(cl.getTimeInMillis());
             }
 
