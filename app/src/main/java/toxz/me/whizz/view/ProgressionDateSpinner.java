@@ -174,7 +174,7 @@ public class ProgressionDateSpinner extends ImageButton {
         return mCalendar;
     }
 
-    public void setCalendar(Calendar calendar) {
+    public void setCalendar(@Nullable Calendar calendar) {
         mCalendar = calendar;
         this.setImageResource(mProgressionAdapter.getDrawableResByLevel(getLevel()));
     }

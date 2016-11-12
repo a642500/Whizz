@@ -267,6 +267,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
 
+    private TextView mDateText;
+
     /**
      * refresh the list, data will refreshed.
      */
@@ -281,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         mMainList.setAdapter(new MyListAdapter(this, mInflater));
     }
 
+    private ProgressionDateSpinner mDateSpinner;
 
     /* call by init() */
     private View initAddNotePager() {
@@ -341,10 +344,10 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             }
         });
 
-        final TextView dateText = (TextView) mNewItemPager.findViewById(R.id.dateText);
-        final ProgressionDateSpinner dateSpinner = (ProgressionDateSpinner) (mNewItemPager.findViewById(R.id.progressionDateSpinner));
-        dateSpinner.setSupportFragmentManager(getSupportFragmentManager());
-        dateSpinner.setOnSelectedListener(new ProgressionDateSpinner.OnSelectedListener() {
+        mDateText = (TextView) mNewItemPager.findViewById(R.id.dateText);
+        mDateSpinner = (ProgressionDateSpinner) (mNewItemPager.findViewById(R.id.progressionDateSpinner));
+        mDateSpinner.setSupportFragmentManager(getSupportFragmentManager());
+        mDateSpinner.setOnSelectedListener(new ProgressionDateSpinner.OnSelectedListener() {
             @Override
             public void onSelected(ProgressionDateSpinner.ProgressionAdapter.Level level, Calendar cl) {
                 if (mCurrentNote == null) {
@@ -365,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                         break;
                 }
                 if (level == ProgressionDateSpinner.ProgressionAdapter.Level.LOW) {
-                    dateText.setVisibility(View.VISIBLE);
+                    mDateText.setVisibility(View.VISIBLE);
                     String pattern;
 
                     final Calendar today = Calendar.getInstance();
@@ -376,9 +379,9 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                         pattern = "MM月dd日";
                     }
 
-                    dateText.setText(new SimpleDateFormat(pattern, Locale.getDefault()).format(cl.getTime()));
+                    mDateText.setText(new SimpleDateFormat(pattern, Locale.getDefault()).format(cl.getTime()));
                 } else {
-                    dateText.setVisibility(View.INVISIBLE);
+                    mDateText.setVisibility(View.INVISIBLE);
                 }
                 mCurrentNote.setDeadline(cl.getTimeInMillis());
             }
@@ -404,6 +407,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             mNoticeSetButton.setImageResource(R.drawable.bottom_bar_notice_grey);
             mDaySpinner.setVisibility(View.GONE);
             mTimeSpinner.setVisibility(View.GONE);
+            mDateSpinner.setCalendar(null);
+            mDateText.setVisibility(View.INVISIBLE);
         } else {
             if (mCurrentNote.getImagesPath().size() > 0) {
                 LinearLayout linearLayout;
@@ -563,9 +568,20 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
                 String note = String.valueOf(mNewNoteEditText.getText());
                 int importance = mDaySpinner.getSelectedItemPosition();
-                if (mCurrentNote == null && (note == null || note.trim().length() == 0))
+
+                boolean nullNote = mCurrentNote == null;
+
+                boolean noPic = nullNote || mCurrentNote.getImagesPath() == null
+                        || mCurrentNote.getImagesPath().size() == 0;
+                boolean noSavedText = nullNote || mCurrentNote.getContent() == null
+                        || mCurrentNote.getContent().trim().length() == 0;
+                boolean noPendingText = note == null || note.trim().length() == 0;
+
+                boolean noText = noSavedText && noPendingText;
+                if (noPic && noText) {
                     Toast.makeText(MainActivity.this, "空白记事，已舍弃", Toast.LENGTH_SHORT).show();
-                else {
+                    mCurrentNote = null;
+                } else {
                     if (mCurrentNote == null) {
                         mCurrentNote = new Note.Builder()
                                 .setNotice(true)
