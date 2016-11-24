@@ -33,15 +33,15 @@ class SimpleDateParser {
     }
 
 
-    private static List<ParsedDate> parseHoliday(@NonNull final String text) {
+    static List<ParsedDate> parseHoliday(@NonNull final String text) {
         List<ParsedDate> result = new ArrayList<>();
         //TODO add holiday support
         return result;
     }
 
-    private static final List<String> DAY_PHRASE = Arrays.asList("前天", "昨天", "今天", "明天", "后天");
+    static final List<String> DAY_PHRASE = Arrays.asList("前天", "昨天", "今天", "明天", "后天");
 
-    private static List<ParsedDate> parseDayPhase(@NonNull final String text) {
+    static List<ParsedDate> parseDayPhase(@NonNull final String text) {
         List<ParsedDate> result = new ArrayList<>();
 
         for (int i = 0; i < DAY_PHRASE.size(); i++) {
@@ -56,7 +56,7 @@ class SimpleDateParser {
     }
 
 
-    private static List<ParsedDate> parseWeekDate(@NonNull final String text) {
+    static List<ParsedDate> parseWeekDate(@NonNull final String text) {
         List<ParsedDate> result = new ArrayList<>();
 
         final String[] keys = {"周", "星期"};
@@ -81,7 +81,7 @@ class SimpleDateParser {
         return result;
     }
 
-    private static int getWhatDay(final String text, final int start) {
+    static int getWhatDay(final String text, final int start) {
         int suffixIndex = start + 1;
 
         if (suffixIndex >= text.length()) {
@@ -94,7 +94,7 @@ class SimpleDateParser {
     }
 
 
-    private static List<ParsedDate> parseMonthDate(@NonNull final String text) {
+    static List<ParsedDate> parseMonthDate(@NonNull final String text) {
         List<ParsedDate> result = new ArrayList<>();
 
         int index = -1;
@@ -145,9 +145,9 @@ class SimpleDateParser {
      * @param reserve
      * @return (number, numberTextLength)
      */
-    private static Pair<Integer, Integer> parseNum(@NonNull final String text, final int center, boolean reserve) {
+    static Pair<Integer, Integer> parseNum(@NonNull final String text, final int center, boolean reserve) {
         int index = reserve ? center - 1 : center + 1;
-        while (text.length() > index && index > 0
+        while (text.length() > index && index >= 0
                 && text.charAt(index) == ' '
                 ) {
             if (reserve) index--;
@@ -155,20 +155,21 @@ class SimpleDateParser {
         }
 
         StringBuilder sb = new StringBuilder();
-        while (text.length() > index && index > 0
-                && text.charAt(index) > '0'
-                && text.charAt(index) < '9'
+        while (text.length() > index && index >= 0
+                && text.charAt(index) >= '0'
+                && text.charAt(index) <= '9'
                 ) {
+            sb.append(text.charAt(index));
+
             if (reserve) index--;
             else index++;
-            sb.append(text.charAt(index));
         }
 
-        String str = sb.toString();
+        String str = reserve ? sb.reverse().toString() : sb.toString();
         if (str.length() > 0) {
             try {
                 int day = Integer.parseInt(str);
-                return Pair.create(day, center - index);
+                return Pair.create(day, Math.abs(center - index) - 1);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
@@ -177,7 +178,7 @@ class SimpleDateParser {
         return Pair.create(-1, -1);
     }
 
-    private static int getSuffixOffset(@NonNull final String text, final int center) {
+    static int getSuffixOffset(@NonNull final String text, final int center) {
         int suffixIndex = center + 1;
         if (suffixIndex >= text.length()) {
             return 0;
@@ -224,7 +225,7 @@ class SimpleDateParser {
      * @return (1, startIndex) if 一号
      */
     @NonNull
-    private static Pair<Integer, Integer> getDayNumInMonth(final String text, final int start) {
+    static Pair<Integer, Integer> getDayNumInMonth(final String text, final int start) {
         int index = start;
         while (index > 0) {
             char c = text.charAt(index - 1);
@@ -256,7 +257,7 @@ class SimpleDateParser {
     }
 
 
-    private static int getOffset(final String text, final int start) {
+    static int getOffset(final String text, final int start) {
         if (match("下下", text, start, true)
                 || match("下下个", text, start, true)
                 ) {
