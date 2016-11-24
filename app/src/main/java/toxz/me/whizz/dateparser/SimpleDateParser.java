@@ -45,11 +45,12 @@ class SimpleDateParser {
         List<ParsedDate> result = new ArrayList<>();
 
         for (int i = 0; i < DAY_PHRASE.size(); i++) {
-            int index;
-            while ((index = text.indexOf(DAY_PHRASE.get(i))) != -1) {
+            int index = 0;
+            while ((index = text.indexOf(DAY_PHRASE.get(i), index)) != -1) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.DAY_OF_YEAR, i - 2);
                 result.add(new ParsedDate(calendar, index, index + 2));
+                index += DAY_PHRASE.get(i).length();
             }
         }
         return result;
@@ -62,9 +63,9 @@ class SimpleDateParser {
         final String[] keys = {"周", "星期"};
 
         for (String key : keys) {
-            int index = -1;
+            int index = 0;
             while ((index = text.indexOf(key, index)) >= 0) {
-                int whatDay = getWhatDay(text, index);
+                int whatDay = getWhatDay(text, index + key.length() - 1);
                 if (whatDay >= 0) {
                     int offset = getOffset(text, index);
 
@@ -74,6 +75,7 @@ class SimpleDateParser {
                     calendar.set(Calendar.DAY_OF_WEEK, value);
 
                     result.add(new ParsedDate(calendar, index, index + key.length() + 1));
+                    index += key.length() + 1;
                 }
             }
         }
@@ -97,12 +99,12 @@ class SimpleDateParser {
     static List<ParsedDate> parseMonthDate(@NonNull final String text) {
         List<ParsedDate> result = new ArrayList<>();
 
-        int index = -1;
 
         final String[] keys = {"日", "号", "天"};
 
         for (int i = 0; i < keys.length; i++) {
             String key = keys[i];
+            int index = 0;
             while ((index = text.indexOf(key, index)) >= 0) {
                 // -1 前， 1 后， 0 无意义
                 int suffixOffset = getSuffixOffset(text, index);
@@ -123,15 +125,18 @@ class SimpleDateParser {
                     Pair<Integer, Integer> pa = getDayNumInMonth(text, index);
 
                     if (pa.first > 0) {
-                        int offset = getOffset(text, index);
+                        //TODO add 月
+//                        int offset = getOffset(text, index);
 
                         Calendar calendar = Calendar.getInstance();
-                        calendar.add(Calendar.MONTH, offset);
+//                        calendar.add(Calendar.MONTH, offset);
                         calendar.set(Calendar.DAY_OF_MONTH, pa.first);
 
                         result.add(new ParsedDate(calendar, pa.second, index));
                     }
                 }
+
+                index += key.length();
 
             }
         }
@@ -195,7 +200,7 @@ class SimpleDateParser {
                 || match("之前", text, center, false)
                 || match("以前", text, center, false)
                 ) {
-            return 1;
+            return -1;
         }
 
         return 0;
@@ -227,32 +232,35 @@ class SimpleDateParser {
     @NonNull
     static Pair<Integer, Integer> getDayNumInMonth(final String text, final int start) {
         int index = start;
-        while (index > 0) {
-            char c = text.charAt(index - 1);
+
+        while (index > 0 && text.charAt(index - 1) == ' ') {
             index--;
+        }
 
-            if (c == ' ')
-                continue;
+        int i, j = 0;
+        boolean matched = false;
+        out:
+        for (i = 0; i < dayss.size(); i++) {
+            List<String> list = dayss.get(i);
 
-            int i, j = 0;
-            out:
-            for (i = 0; i < dayss.size(); i++) {
-                List<String> list = dayss.get(i);
-
-                for (j = 0; j < list.size(); j++) {
-                    String s = list.get(j);
-                    if (match(s, text, index, true)) {
-                        break out;
-                    }
+            for (j = list.size() - 1; j >= 0; j--) {
+                // reserve iter because 13 is not 3
+                String s = list.get(j);
+                if (match(s, text, index, true)) {
+                    matched = true;
+                    break out;
                 }
             }
+        }
 
+        if (matched) {
             int startIndex = start - dayss.get(i).get(j).length();
             if (i == 2) {
                 return Pair.create(j + 21, startIndex);
             } else
                 return Pair.create(j + 1, startIndex);
         }
+
         return Pair.create(-1, -1);
     }
 
@@ -286,21 +294,21 @@ class SimpleDateParser {
     }
 
 
-    private static boolean match(@NonNull String pattern, String text, int start, boolean reserve) {
-        if (!reserve && start + pattern.length() >= text.length()) {
+    private static boolean match(@NonNull String pattern, String text, int center, boolean reserve) {
+        if (!reserve && center + pattern.length() > text.length()) {
             return false;
         }
 
-        if (reserve && start - pattern.length() < 0) {
+        if (reserve && center - pattern.length() < 0) {
             return false;
         }
 
         if (reserve) {
-            start = start - pattern.length();
+            center = center - pattern.length() - 1;
         }
 
         for (int i = 0; i < pattern.length(); i++) {
-            if (pattern.charAt(i) != text.charAt(start + i)) {
+            if (pattern.charAt(i) != text.charAt(center + 1 + i)) {
                 return false;
             }
         }
