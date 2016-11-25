@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -46,8 +49,11 @@ import toxz.me.whizz.application.ShortCutCreator;
 import toxz.me.whizz.data.DataChangedListener;
 import toxz.me.whizz.data.DatabaseHelper;
 import toxz.me.whizz.data.Note;
+import toxz.me.whizz.dateparser.ParsedDate;
+import toxz.me.whizz.dateparser.ParserUtil;
 import toxz.me.whizz.monitor.NoticeMonitorService;
 import toxz.me.whizz.view.ProgressionDateSpinner;
+import toxz.me.whizz.view.ProgressionDateSpinner.ProgressionAdapter.Level;
 
 import static android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
@@ -58,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
     public static final int REQUEST_CODE_IMAGE_PICK = 1;
     public static final int SCROLL_FLAG_FROM_ONE_TO_TWO = 0;
     public static final int SCROLL_FLAG_FROM_TWO_TO_ONE = 1;
+    private static final String TAG = "MainActivity";
 
     final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm 创建");
     private LayoutInflater mInflater;
@@ -290,12 +297,35 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         mNewItemPager = mInflater.inflate(R.layout.new_item_pager, null);
         assert mNewItemPager != null;
         mNewNoteEditText = (EditText) mNewItemPager.findViewById(R.id.et_input_note);
+
+        mNewNoteEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = s.toString();
+                Log.i(TAG, String.format("parse start, %d, str: %s", SystemClock.uptimeMillis(), str));
+                ParsedDate parsedDate = ParserUtil.parseDeadline(str);
+                if (parsedDate != null && mDateSpinner != null) {
+                    mDateSpinner.setCalendar(parsedDate.date);
+                }
+                Log.i(TAG, String.format("parse end, %d, date: %s", SystemClock.uptimeMillis(),
+                        parsedDate == null ? "null" : parsedDate.toString()));
+            }
+        });
+
         mImageContainer = (LinearLayout) mNewItemPager.findViewById(R.id.image_container);
         mNoticeSetButton = (ImageButton) mNewItemPager.findViewById(R.id.bottom_bar_notice);
         mCreatedTimeText = (TextView) mNewItemPager.findViewById(R.id.tv_create_time);
 
-//        mDaySpinner = (Spinner) mNewItemPager.findViewById(R.id.day_spinner);
-//        mTimeSpinner = (Spinner) mNewItemPager.findViewById(R.id.time_spinner);
         mDaySpinner = new Spinner(this);
         mTimeSpinner = new Spinner(this);
         mDaySpinner.setAdapter(
@@ -349,7 +379,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         mDateSpinner.setSupportFragmentManager(getSupportFragmentManager());
         mDateSpinner.setOnSelectedListener(new ProgressionDateSpinner.OnSelectedListener() {
             @Override
-            public void onSelected(ProgressionDateSpinner.ProgressionAdapter.Level level, Calendar cl) {
+            public void onSelected(Level level, Calendar cl) {
                 if (mCurrentNote == null) {
                     mCurrentNote = new Note();
                 }
@@ -367,22 +397,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                         mCurrentNote.setImportance(Note.NO_IMPORTANCE);
                         break;
                 }
-                if (level == ProgressionDateSpinner.ProgressionAdapter.Level.LOW) {
-                    mDateText.setVisibility(View.VISIBLE);
-                    String pattern;
 
-                    final Calendar today = Calendar.getInstance();
-//                    int delta = cl.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR);
-                    if (cl.get(Calendar.YEAR) != today.get(Calendar.YEAR)) {
-                        pattern = "YYYY年MM月dd日";
-                    } else {
-                        pattern = "MM月dd日";
-                    }
-
-                    mDateText.setText(new SimpleDateFormat(pattern, Locale.getDefault()).format(cl.getTime()));
-                } else {
-                    mDateText.setVisibility(View.INVISIBLE);
-                }
                 mCurrentNote.setDeadline(cl.getTimeInMillis());
             }
 
@@ -390,6 +405,29 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             public void onCancel() {
                 mCurrentNote.setDeadline(0);
                 mCurrentNote.setImportance(Note.NO_IMPORTANCE);
+            }
+        });
+        mDateSpinner.setOnCalendarChangedListener(new ProgressionDateSpinner.OnCalendarChangedListener() {
+            @Override
+            public void onChanged(Calendar before, Calendar after,
+                                  Level beforeLevel, Level afterLevel) {
+                if (after != null && afterLevel == Level.LOW) {
+                    mDateText.setVisibility(View.VISIBLE);
+                    String pattern;
+
+                    final Calendar today = Calendar.getInstance();
+//                    int delta = cl.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR);
+                    if (after.get(Calendar.YEAR) != today.get(Calendar.YEAR)) {
+                        pattern = "YYYY年MM月dd日";
+                    } else {
+                        pattern = "MM月dd日";
+                    }
+
+                    mDateText.setText(new SimpleDateFormat(pattern,
+                            Locale.getDefault()).format(after.getTime()));
+                } else {
+                    mDateText.setVisibility(View.INVISIBLE);
+                }
             }
         });
 

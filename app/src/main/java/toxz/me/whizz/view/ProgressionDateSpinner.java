@@ -175,6 +175,10 @@ public class ProgressionDateSpinner extends ImageButton {
     }
 
     public void setCalendar(@Nullable Calendar calendar) {
+        if (mCalendarChangedListener != null) {
+            mCalendarChangedListener.onChanged(mCalendar, calendar, getLevel()
+                    , mProgressionAdapter.getLevel(calendar));
+        }
         mCalendar = calendar;
         this.setImageResource(mProgressionAdapter.getDrawableResByLevel(getLevel()));
     }
@@ -254,7 +258,17 @@ public class ProgressionDateSpinner extends ImageButton {
         mSelectedListener = listener;
     }
 
+    public void setOnCalendarChangedListener(OnCalendarChangedListener calendarChangedListener) {
+        this.mCalendarChangedListener = calendarChangedListener;
+    }
+
     private OnSelectedListener mSelectedListener;
+    private OnCalendarChangedListener mCalendarChangedListener;
+
+    public interface OnCalendarChangedListener {
+        void onChanged(@Nullable Calendar before, @Nullable Calendar after,
+                       ProgressionAdapter.Level beforeLevel, ProgressionAdapter.Level afterLevel);
+    }
 
     private static class DefaultProgressionAdapter implements ProgressionAdapter {
         @NonNull
@@ -334,7 +348,6 @@ public class ProgressionDateSpinner extends ImageButton {
                         }
                         setCalendar(calendar);
                     } else {
-                        // TODO show dialog pick date
                         if (mSupportFragmentManager != null) {
                             new CalendarDatePickerDialogFragment()
                                     .setThemeLight()

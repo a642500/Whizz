@@ -17,4 +17,16 @@ public class ParsedDate {
         this.start = start;
         this.end = end;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + '[' +
+                "calendar=" +
+                (date == null ? null : date.toString()) +
+                ",start=" +
+                start +
+                ",end=" +
+                end +
+                ']';
+    }
 }
