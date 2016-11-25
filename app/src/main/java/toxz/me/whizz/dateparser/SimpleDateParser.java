@@ -1,8 +1,8 @@
 package toxz.me.whizz.dateparser;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
-import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ class SimpleDateParser {
     public static List<ParsedDate> parseDate(String text) {
         List<ParsedDate> result = new ArrayList<>();
 
-        if (TextUtils.isEmpty(text) || text.trim().length() == 0) {
+        if (isEmpty(text) || text.trim().length() == 0) {
             return null;
         }
 
@@ -32,6 +32,20 @@ class SimpleDateParser {
         return result;
     }
 
+    /**
+     * Returns true if the string is null or 0-length.
+     * <p>
+     * Copied from android.text.TextUtils because it's not mocked.
+     *
+     * @param str the string to be examined
+     * @return true if str is null or zero length
+     */
+    private static boolean isEmpty(@Nullable CharSequence str) {
+        if (str == null || str.length() == 0)
+            return true;
+        else
+            return false;
+    }
 
     static List<ParsedDate> parseHoliday(@NonNull final String text) {
         List<ParsedDate> result = new ArrayList<>();
@@ -66,8 +80,9 @@ class SimpleDateParser {
             int index = 0;
             while ((index = text.indexOf(key, index)) >= 0) {
                 int whatDay = getWhatDay(text, index + key.length() - 1);
+                int offset = getOffset(text, index);
+
                 if (whatDay >= 0) {
-                    int offset = getOffset(text, index);
 
                     Calendar calendar = Calendar.getInstance();
                     calendar.add(Calendar.WEEK_OF_YEAR, offset);
@@ -75,8 +90,16 @@ class SimpleDateParser {
                     calendar.set(Calendar.DAY_OF_WEEK, value);
 
                     result.add(new ParsedDate(calendar, index, index + key.length() + 1));
-                    index += key.length() + 1;
+                } else if (key.equals("星期") && offset != 0) {
+                    // 下星期
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.add(Calendar.WEEK_OF_YEAR, offset);
+
+                    result.add(new ParsedDate(calendar, index, index + key.length() + 1));
                 }
+
+
+                index += key.length() + 1;
             }
         }
 

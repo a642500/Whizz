@@ -19,6 +19,10 @@ import static junit.framework.Assert.assertTrue;
 public class ParserTest {
 
     @Test
+    public void testParse() {
+    }
+
+    @Test
     public void testMatch() {
 
     }
@@ -81,6 +85,11 @@ public class ParserTest {
 
         cl.add(Calendar.WEEK_OF_YEAR, -1);
         date = SimpleDateParser.parseWeekDate("上星期一刚去吃过饭").get(0);
+        testSameDay(cl, date.date);
+
+        cl = Calendar.getInstance();
+        date = SimpleDateParser.parseWeekDate("下星期去吃饭").get(0);
+        cl.add(Calendar.WEEK_OF_YEAR, 1);
         testSameDay(cl, date.date);
     }
 
