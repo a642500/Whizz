@@ -9,9 +9,13 @@ import java.util.List;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class ParserUtil {
     public static ParsedDate parseDeadline(String text) {
-        List<ParsedDate> list = parse(text);
-        if (list.size() > 0) {
-            return list.get(0);
+        try {
+            List<ParsedDate> list = parse(text);
+            if (list.size() > 0) {
+                return list.get(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return null;
