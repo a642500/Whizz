@@ -1,7 +1,6 @@
 package toxz.me.whizz.view;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Rect;
@@ -29,7 +28,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -47,7 +45,7 @@ import toxz.me.whizz.R;
  */
 
 @SuppressWarnings("RestrictedApi")
-public class ProgressionDateSpinner extends ImageButton {
+public class ProgressionDateSpinner extends android.support.v7.widget.AppCompatImageButton {
     static final boolean IS_AT_LEAST_M = Build.VERSION.SDK_INT >= 23;
     private static final int MAX_ITEMS_MEASURED = 15;
     final Rect mTempRect = new Rect();
@@ -79,12 +77,6 @@ public class ProgressionDateSpinner extends ImageButton {
         init(context, attrs, defStyleAttr, 0);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ProgressionDateSpinner(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs, defStyleAttr, defStyleRes);
-    }
-
     public ProgressionAdapter getProgressionAdapter() {
         return mProgressionAdapter;
     }
@@ -100,7 +92,8 @@ public class ProgressionDateSpinner extends ImageButton {
 
 
         @SuppressLint("PrivateResource")
-        final int popupThemeResId = a.getResourceId(android.support.v7.appcompat.R.styleable.Spinner_popupTheme, 0);
+        final int popupThemeResId = a.getResourceId(android.support.v7.appcompat.R.styleable
+                .Spinner_popupTheme, 0);
         if (popupThemeResId != 0) {
             mPopupContext = new ContextThemeWrapper(context, popupThemeResId);
         } else {
@@ -274,8 +267,7 @@ public class ProgressionDateSpinner extends ImageButton {
         @NonNull
         @Override
         public Level getLevel(final Calendar calendar) {
-            if (calendar == null)
-                return Level.LOW;
+            if (calendar == null) { return Level.LOW; }
 
             final Calendar today = Calendar.getInstance(Locale.getDefault());
             if (today.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
@@ -332,7 +324,8 @@ public class ProgressionDateSpinner extends ImageButton {
             setAnchorView(ProgressionDateSpinner.this);
             setModal(true);
             setPromptPosition(POSITION_PROMPT_ABOVE);
-            setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item,
+            setAdapter(new ArrayAdapter<>(getContext(), android.R.layout
+                    .simple_spinner_dropdown_item,
                     new String[]{"今天", "明天", "选择日期..."}));
             setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -343,7 +336,8 @@ public class ProgressionDateSpinner extends ImageButton {
                                 calendar.get(Calendar.DAY_OF_YEAR) + position);
                         if (!calendar.equals(getCalendar())) {
                             if (mSelectedListener != null) {
-                                mSelectedListener.onSelected(getProgressionAdapter().getLevel(calendar), calendar);
+                                mSelectedListener.onSelected(getProgressionAdapter().getLevel
+                                        (calendar), calendar);
                             }
                         }
                         setCalendar(calendar);
@@ -351,24 +345,31 @@ public class ProgressionDateSpinner extends ImageButton {
                         if (mSupportFragmentManager != null) {
                             new CalendarDatePickerDialogFragment()
                                     .setThemeLight()
-                                    .setOnDateSetListener(new CalendarDatePickerDialogFragment.OnDateSetListener() {
+                                    .setOnDateSetListener(new CalendarDatePickerDialogFragment
+                                            .OnDateSetListener() {
                                         @Override
-                                        public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+                                        public void onDateSet(CalendarDatePickerDialogFragment
+                                                                      dialog, int year, int
+                                                                      monthOfYear, int dayOfMonth) {
                                             final Calendar calendar = Calendar.getInstance();
                                             calendar.set(Calendar.DAY_OF_YEAR, year);
                                             calendar.set(Calendar.MONTH, monthOfYear);
                                             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                                             if (!calendar.equals(getCalendar())) {
                                                 if (mSelectedListener != null) {
-                                                    mSelectedListener.onSelected(getProgressionAdapter().getLevel(calendar), calendar);
+                                                    mSelectedListener.onSelected
+                                                            (getProgressionAdapter().getLevel
+                                                                    (calendar), calendar);
                                                 }
                                             }
                                             setCalendar(calendar);
                                         }
                                     })
-                                    .setOnDismissListener(new CalendarDatePickerDialogFragment.OnDialogDismissListener() {
+                                    .setOnDismissListener(new CalendarDatePickerDialogFragment
+                                            .OnDialogDismissListener() {
                                         @Override
-                                        public void onDialogDismiss(DialogInterface dialoginterface) {
+                                        public void onDialogDismiss(DialogInterface
+                                                                            dialoginterface) {
                                             if (mSelectedListener != null) {
                                                 mSelectedListener.onCancel();
                                             }
@@ -457,7 +458,7 @@ public class ProgressionDateSpinner extends ImageButton {
                         if (!isVisibleToUser(ProgressionDateSpinner.this)) {
                             dismiss();
                         } else {
-//                            computeContentWidth();
+                            //                            computeContentWidth();
 
                             // Use super.show here to update; we don't want to move the selected
                             // position or adjust other things that would be reset otherwise.

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/main_background">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/main_background">
 
 
     <LinearLayout
@@ -21,7 +21,7 @@
             android:layout_gravity="right"
             android:layout_margin="8dp"
             android:text="未设定时间"
-            android:textColor="#bfbfbf" />
+            android:textColor="#bfbfbf"/>
 
 
         <LinearLayout
@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/line_separate"
-            android:orientation="vertical" />
+            android:orientation="vertical"/>
 
         <LinearLayout
             android:id="@+id/bottom_bar"
@@ -48,7 +48,7 @@
                 android:contentDescription="@string/new_note_add_voice_button_content_description"
                 android:onClick="onClick"
                 android:src="@drawable/bottom_bar_add_voice"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/bottom_bar_image"
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/new_note_add_pic_button_content_description"
                 android:onClick="onClick"
-                android:src="@drawable/bottom_bar_add_pic" />
+                android:src="@drawable/bottom_bar_add_pic"/>
 
             <ImageButton
                 android:id="@+id/bottom_bar_notice"
@@ -67,28 +67,40 @@
                 android:contentDescription="@string/new_note_set_notice_button_content_description"
                 android:onClick="onClick"
                 android:src="@drawable/bottom_bar_notice_grey"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <ButtonSpinner
                 android:id="@+id/bottom_bar_notice_spinner"
                 style="?android:buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
-            <toxz.me.whizz.view.ProgressionDateSpinner
-                android:id="@+id/progressionDateSpinner"
-                style="?android:buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/dateText"
+            <toxz.me.whizz.view.RectAnimationLinearLayout
+                android:id="@+id/dateGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:textColor="@android:color/darker_gray"
-                tools:text="12月2日" />
+                android:orientation="horizontal"
+                android:paddingEnd="16dp"
+                android:paddingRight="16dp">
+                <!--This Container is for animation-->
+                <toxz.me.whizz.view.ProgressionDateSpinner
+                    android:id="@+id/progressionDateSpinner"
+                    style="?android:buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <TextView
+                    android:id="@+id/dateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="@android:color/darker_gray"
+                    tools:text="12月2日"/>
+
+            </toxz.me.whizz.view.RectAnimationLinearLayout>
+
 
             <!--<Spinner-->
             <!--android:id="@+id/day_spinner"-->
@@ -140,7 +152,7 @@
                 android:layout_height="match_parent"
                 android:gravity="start"
                 android:hint="@string/new_note_hint"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"/>
         </LinearLayout>
     </ScrollView>
 

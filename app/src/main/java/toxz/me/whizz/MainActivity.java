@@ -32,7 +32,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
-import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment.OnDateSetListener;
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment
+        .OnDateSetListener;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
@@ -58,7 +61,8 @@ import toxz.me.whizz.view.ProgressionDateSpinner.ProgressionAdapter.Level;
 import static android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
 
-public class MainActivity extends AppCompatActivity implements DataChangedListener, ViewPager.OnPageChangeListener,
+public class MainActivity extends AppCompatActivity implements DataChangedListener, ViewPager
+        .OnPageChangeListener,
         ActionMode.Callback, View.OnClickListener {
 
     public static final int REQUEST_CODE_IMAGE_PICK = 1;
@@ -171,7 +175,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         /* show indicator on action bar */
         View customActionBarView = mInflater.inflate(R.layout.custom_action_bar, null);
         assert customActionBarView != null;
-        UnderlinePageIndicator pagerIndicator = (UnderlinePageIndicator) customActionBarView.findViewById(R.id.pageIndicator);
+        UnderlinePageIndicator pagerIndicator = (UnderlinePageIndicator) customActionBarView
+                .findViewById(R.id.pageIndicator);
         pagerIndicator.setSelectedColor(getResources().getColor(R.color.item_background));
         pagerIndicator.setFades(false);
         pagerIndicator.setViewPager(mViewPager);
@@ -189,15 +194,15 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         initDao();
     }
 
-//    DevOpen
+    //    DevOpen
 
     private void initDao() {
-//        helper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
-//        db = helper.getWritableDatabase();
-//        daoMaster = new DaoMaster(db);
-//        daoSession = daoMaster.newSession();
-//// do this in your activities/fragments to get hold of a DAO
-//        noteDao = daoSession.getNoteDao();
+        //        helper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
+        //        db = helper.getWritableDatabase();
+        //        daoMaster = new DaoMaster(db);
+        //        daoSession = daoMaster.newSession();
+        //// do this in your activities/fragments to get hold of a DAO
+        //        noteDao = daoSession.getNoteDao();
     }
 
     private AdapterView.OnItemClickListener mListItemClickListener;
@@ -240,34 +245,41 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         mMainList.setOnItemClickListener(mListItemClickListener);
         mListItemLongClickListener = new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mActionMode != null) return true;
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long
+                    id) {
+                if (mActionMode != null) { return true; }
                 startActionMode(MainActivity.this);
                 view.setBackgroundResource(R.color.selected_background);
-                Log.i("onItemLongClick()", "start actionMode, item " + position + " is added to ArrayList");
+                Log.i("onItemLongClick()", "play actionMode, item " + position + " is added to " +
+                        "ArrayList");
                 mCheckedItem.add((Note) view.getTag());
                 return true;
             }
         };
         mMainList.setOnItemLongClickListener(mListItemLongClickListener);
-        mMainList.setSwipeDirection(EnhancedListView.SwipeDirection.END).setDismissCallback(new EnhancedListView.OnDismissCallback() {
-            @Override
-            public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int position) {
-                if (position < listView.getAdapter().getCount()) {
-                    final Note note = (Note) listView.getAdapter().getItem(position);
-                    note.delete(DatabaseHelper.getDatabaseHelper(MainActivity.this));
-                    return new EnhancedListView.Undoable() {
-                        @Override
-                        public void undo() {
-                            note.resetID().commit(DatabaseHelper.getDatabaseHelper(MainActivity.this));
+        mMainList.setSwipeDirection(EnhancedListView.SwipeDirection.END).setDismissCallback(
+                new EnhancedListView.OnDismissCallback() {
+                    @Override
+                    public EnhancedListView.Undoable onDismiss(EnhancedListView listView, int
+                            position) {
+                        if (position < listView.getAdapter().getCount()) {
+                            final Note note = (Note) listView.getAdapter().getItem(position);
+                            note.delete(DatabaseHelper.getDatabaseHelper(MainActivity.this));
+                            return new EnhancedListView.Undoable() {
+                                @Override
+                                public void undo() {
+                                    note.resetID().commit(DatabaseHelper.getDatabaseHelper
+                                            (MainActivity
+                                                    .this));
+                                }
+                            };
+                        } else {
+                            Log.e("onDismiss()", "return null");
+                            return null;
                         }
-                    };
-                } else {
-                    Log.e("onDismiss()", "return null");
-                    return null;
-                }
-            }
-        }).setRequireTouchBeforeDismiss(false).setUndoHideDelay(3000).setUndoStyle(EnhancedListView.UndoStyle.MULTILEVEL_POPUP).enableSwipeToDismiss();
+                    }
+                }).setRequireTouchBeforeDismiss(false).setUndoHideDelay(3000).setUndoStyle
+                (EnhancedListView.UndoStyle.MULTILEVEL_POPUP).enableSwipeToDismiss();
         refreshList();
         return itemListPager;
     }
@@ -282,11 +294,11 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
     private void refreshList() {
         //every item show up to 80 Words.Set by xml.
         Log.i("refreshList()", "!!!");
-        if (!DatabaseHelper.getDatabaseHelper(getApplicationContext()).hasNotes())
+        if (!DatabaseHelper.getDatabaseHelper(getApplicationContext()).hasNotes()) {
             mNoNote.setVisibility(View.VISIBLE);
-            //if contain no items，not display list, and the notice for no item will displayed.
-        else
-            mNoNote.setVisibility(View.GONE);
+        }
+        //if contain no items，not display list, and the notice for no item will displayed.
+        else { mNoNote.setVisibility(View.GONE); }
         mMainList.setAdapter(new MyListAdapter(this, mInflater));
     }
 
@@ -297,25 +309,33 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         mNewItemPager = mInflater.inflate(R.layout.new_item_pager, null);
         assert mNewItemPager != null;
         mNewNoteEditText = (EditText) mNewItemPager.findViewById(R.id.et_input_note);
+        // final RectAnimationLinearLayout dateGroup = (RectAnimationLinearLayout) mNewItemPager
+        //         .findViewById(R.id.dateGroup);
 
         mNewNoteEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            private ParsedDate lastDate;
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
-            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
 
             @Override
             public void afterTextChanged(Editable s) {
                 String str = s.toString();
-                Log.i(TAG, String.format("parse start, %d, str: %s", SystemClock.uptimeMillis(), str));
+                Log.i(TAG, String.format("parse play, %d, str: %s", SystemClock.uptimeMillis(),
+                        str));
                 ParsedDate parsedDate = ParserUtil.parseDeadline(str);
                 if (parsedDate != null && mDateSpinner != null) {
                     mDateSpinner.setCalendar(parsedDate.date);
+                    // dateGroup.play();
+
+                    if (!parsedDate.equals(lastDate)) {
+                        lastDate = parsedDate;
+                        YoYo.with(Techniques.Shake).playOn(mDateSpinner);
+                    }
+
                 }
                 Log.i(TAG, String.format("parse end, %d, date: %s", SystemClock.uptimeMillis(),
                         parsedDate == null ? "null" : parsedDate.toString()));
@@ -335,7 +355,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
                         new String[]{"早上08：00", "下午13：00", "晚上17：00", "夜间20：00", "选择时刻..."}));
 
-        ButtonSpinner spinner = (ButtonSpinner) mNewItemPager.findViewById(R.id.bottom_bar_notice_spinner);
+        ButtonSpinner spinner = (ButtonSpinner) mNewItemPager.findViewById(R.id
+                .bottom_bar_notice_spinner);
         spinner.setAdapter(
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
                         new String[]{"今天", "明天", "选择日期..."}));
@@ -375,7 +396,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         });
 
         mDateText = (TextView) mNewItemPager.findViewById(R.id.dateText);
-        mDateSpinner = (ProgressionDateSpinner) (mNewItemPager.findViewById(R.id.progressionDateSpinner));
+        mDateSpinner = (ProgressionDateSpinner) (mNewItemPager.findViewById(R.id
+                .progressionDateSpinner));
         mDateSpinner.setSupportFragmentManager(getSupportFragmentManager());
         mDateSpinner.setOnSelectedListener(new ProgressionDateSpinner.OnSelectedListener() {
             @Override
@@ -407,7 +429,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                 mCurrentNote.setImportance(Note.NO_IMPORTANCE);
             }
         });
-        mDateSpinner.setOnCalendarChangedListener(new ProgressionDateSpinner.OnCalendarChangedListener() {
+        mDateSpinner.setOnCalendarChangedListener(new ProgressionDateSpinner
+                .OnCalendarChangedListener() {
             @Override
             public void onChanged(Calendar before, Calendar after,
                                   Level beforeLevel, Level afterLevel) {
@@ -416,7 +439,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                     String pattern;
 
                     final Calendar today = Calendar.getInstance();
-//                    int delta = cl.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR);
+                    //                    int delta = cl.get(Calendar.DAY_OF_YEAR) - today.get
+                    // (Calendar.DAY_OF_YEAR);
                     if (after.get(Calendar.YEAR) != today.get(Calendar.YEAR)) {
                         pattern = "YYYY年MM月dd日";
                     } else {
@@ -436,7 +460,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
     }
 
     //TODO IMPROVE: when scroll between two page, disable the relayout of the first pager
-    //TODO pictures break down after restart app, maybe because permission, I believe copying a picture into our zoom can fix it.
+    //TODO pictures break down after restart app, maybe because permission, I believe copying a
+    // picture into our zoom can fix it.
     private void refreshNotePager() {
         mImageContainer.removeAllViews();
         /* what need to be refresh: image list , alarm color , time pick */
@@ -451,26 +476,32 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         } else {
             if (mCurrentNote.getImagesPath().size() > 0) {
                 LinearLayout linearLayout;
-                Log.i("refreshNotePager()", "image path sizes: " + mCurrentNote.getImagesPath().size());
+                Log.i("refreshNotePager()", "image path sizes: " + mCurrentNote.getImagesPath()
+                        .size());
                 for (int i = 0; i < mCurrentNote.getImagesPath().size(); i += 2) {
                     Log.i("load images", "Path is " + mCurrentNote.getImagesPath().get(i));
                     Log.i("refreshNotePager()", "add pic  i = " + i);
                     if (i == mCurrentNote.getImagesPath().size() - 1) {
                         Log.i("refreshNotePager()", "kind 1 was created ! ");
-                        linearLayout = (LinearLayout) mInflater.inflate(R.layout.image_layout, null);
+                        linearLayout = (LinearLayout) mInflater.inflate(R.layout.image_layout,
+                                null);
                         ImageView imageView = (ImageView) linearLayout.findViewById(R.id.image);
                         imageView.setTag(mCurrentNote.getImagesPath().get(i));
-//                        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentNote.getImagesPath().get(i));
-//                        imageView.setImageBitmap(bitmap);
-                        Picasso.with(MainActivity.this).load(mCurrentNote.getImagesPath().get(i)).error(R.drawable.ic_launcher).into(imageView);
+                        //                        Bitmap bitmap = BitmapFactory.decodeFile
+                        // (mCurrentNote.getImagesPath().get(i));
+                        //                        imageView.setImageBitmap(bitmap);
+                        Picasso.with(MainActivity.this).load(mCurrentNote.getImagesPath().get(i))
+                                .error(R.drawable.ic_launcher).into(imageView);
                     } else {
                         Log.i("refreshNotePager()", "kind 2 was created ! i=" + i);
-                        linearLayout = (LinearLayout) mInflater.inflate(R.layout.two_image_layout, null);
+                        linearLayout = (LinearLayout) mInflater.inflate(R.layout
+                                .two_image_layout, null);
                         ImageView imageView1 = (ImageView) linearLayout.findViewById(R.id.image1);
                         imageView1.setTag(mCurrentNote.getImagesPath().get(i));
 
-//                        Bitmap bitmap1 = BitmapFactory.decodeFile(mCurrentNote.getImagesPath().get(i));
-//                        imageView1.setImageBitmap(bitmap1);
+                        //                        Bitmap bitmap1 = BitmapFactory.decodeFile
+                        // (mCurrentNote.getImagesPath().get(i));
+                        //                        imageView1.setImageBitmap(bitmap1);
                         Picasso.with(MainActivity.this)
                                 .load(mCurrentNote.getImagesPath().get(i))
                                 .error(R.drawable.ic_launcher)
@@ -480,8 +511,9 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                         ImageView imageView2 = (ImageView) linearLayout.findViewById(R.id.image2);
                         imageView2.setTag(mCurrentNote.getImagesPath().get(i));
 
-//                        Bitmap bitmap2 = BitmapFactory.decodeFile(mCurrentNote.getImagesPath().get(i + 1));
-//                        imageView2.setImageBitmap(bitmap2);
+                        //                        Bitmap bitmap2 = BitmapFactory.decodeFile
+                        // (mCurrentNote.getImagesPath().get(i + 1));
+                        //                        imageView2.setImageBitmap(bitmap2);
                         Picasso.with(MainActivity.this)
                                 .load(mCurrentNote.getImagesPath().get(i + 1))
                                 .error(R.drawable.ic_launcher)
@@ -541,10 +573,11 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         mCurrentPage = position;
-//
-//        Log.i("vital", "Viewpager onPageScrolled ! position is :" + position + ", position offset is " + positionOffset + ", pixels is " + positionOffsetPixels);
-//        Log.i("vital", "isEdit is  " + isEdit);
-//TODO 仿x-plore的滑动
+        //
+        //        Log.i("vital", "Viewpager onPageScrolled ! position is :" + position + ",
+        // position offset is " + positionOffset + ", pixels is " + positionOffsetPixels);
+        //        Log.i("vital", "isEdit is  " + isEdit);
+        //TODO 仿x-plore的滑动
 
 
         /*当偏移小于一定值时绘制指示图标，当大于这一值时，触发onScrollPage*/
@@ -552,8 +585,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
     @Override
     public void onPageSelected(int position) {
-//        Log.i("vital", "onPageSelected : position is " + position);
-//        Log.i("vital", "isEdit is  " + isEdit);
+        //        Log.i("vital", "onPageSelected : position is " + position);
+        //        Log.i("vital", "isEdit is  " + isEdit);
     }
 
     @Override
@@ -571,8 +604,9 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             onScrollPage(SCROLL_FLAG_FROM_TWO_TO_ONE);
             isEdit = false;
         }
-//        Log.i("onPageScrollStateChanged()", "isEdit  is " + isEdit + " ,  mCurrentPage is " + mCurrentPage);
-//                Log.i("vital", "isEdit is  " + isEdit);
+        //        Log.i("onPageScrollStateChanged()", "isEdit  is " + isEdit + " ,  mCurrentPage
+        // is " + mCurrentPage);
+        //                Log.i("vital", "isEdit is  " + isEdit);
 
     }
 
@@ -587,7 +621,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                 refreshNotePager();
                 if (mNewNoteEditText != null) {
                     mNewNoteEditText.requestFocus();
-                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager inputMethodManager = (InputMethodManager) getSystemService
+                            (Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.showSoftInput(mNewNoteEditText, 0);
                 }
                 break;
@@ -597,7 +632,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                 mMainList.requestFocus();
 
 
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService
+                        (Context.INPUT_METHOD_SERVICE);
                 try {
                     inputMethodManager.hideSoftInputFromWindow(mMainList.getWindowToken(), 0);
                 } catch (Exception e) {
@@ -670,7 +706,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                 for (int i = 0; i < mCheckedItem.size(); i++) {
                     note = mCheckedItem.get(i);
                     note.setFinished(true);
-                    Log.i("onActionItemClicked()", "note " + note.getContent() + " , id " + note.getID() + " is finished.");
+                    Log.i("onActionItemClicked()", "note " + note.getContent() + " , id " + note
+                            .getID() + " is finished.");
                     note.commit(DatabaseHelper.getDatabaseHelper(MainActivity.this));
                 }
                 mode.finish();
@@ -692,7 +729,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        if (mCheckedItem.size() != 0) refreshList();
+        if (mCheckedItem.size() != 0) { refreshList(); }
         mCheckedItem.clear();
         mActionMode = null;
     }
@@ -706,16 +743,15 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                 break;
             case R.id.bottom_bar_image:
                 mTempText = mNewNoteEditText.getText().toString();
-                if (mTempText == null)
-                    mTempText = "";
-                startActivityForResult(new Intent(Intent.ACTION_PICK, EXTERNAL_CONTENT_URI), REQUEST_CODE_IMAGE_PICK);
+                if (mTempText == null) { mTempText = ""; }
+                startActivityForResult(new Intent(Intent.ACTION_PICK, EXTERNAL_CONTENT_URI),
+                        REQUEST_CODE_IMAGE_PICK);
                 break;
             case R.id.bottom_bar_notice:
 
                 //TODO set notice time  and save it into Note instance.
                 if (mDaySpinner.getVisibility() == View.VISIBLE) {
-                    if (mCurrentNote != null)
-                        mCurrentNote.setImportance(Note.NO_IMPORTANCE);
+                    if (mCurrentNote != null) { mCurrentNote.setImportance(Note.NO_IMPORTANCE); }
                     mDaySpinner.setVisibility(View.GONE);
                     mTimeSpinner.setVisibility(View.GONE);
                     //TODO 去掉时间
