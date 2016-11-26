@@ -10,11 +10,11 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -66,8 +66,7 @@ import static android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
 
 public class MainActivity extends AppCompatActivity implements DataChangedListener, ViewPager
-        .OnPageChangeListener,
-        ActionMode.Callback, View.OnClickListener {
+        .OnPageChangeListener, View.OnClickListener, ActionMode.Callback {
 
     public static final int REQUEST_CODE_IMAGE_PICK = 1;
     public static final int SCROLL_FLAG_FROM_ONE_TO_TWO = 0;
@@ -253,7 +252,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long
                     id) {
                 if (mActionMode != null) { return true; }
-                startActionMode(MainActivity.this);
+                startSupportActionMode(MainActivity.this);
                 view.setBackgroundResource(R.color.selected_background);
                 Log.i("onItemLongClick()", "play actionMode, item " + position + " is added to " +
                         "ArrayList");
@@ -691,56 +690,6 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
     }
 
-
-    @Override
-    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        mode.getMenuInflater().inflate(R.menu.action_mode, menu);
-        mActionMode = mode;
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        return true;
-    }
-
-    @Override
-    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.actionMode_finish:
-                Note note;
-                for (int i = 0; i < mCheckedItem.size(); i++) {
-                    note = mCheckedItem.get(i);
-                    note.setFinished(true);
-                    Log.i("onActionItemClicked()", "note " + note.getContent() + " , id " + note
-                            .getID() + " is finished.");
-                    note.commit(DatabaseHelper.getDatabaseHelper(MainActivity.this));
-                }
-                mode.finish();
-                break;
-            case R.id.actionMode_delete:
-                Note note2;
-                for (int i = 0; i < mCheckedItem.size(); i++) {
-                    note2 = mCheckedItem.get(i);
-                    note2.delete(DatabaseHelper.getDatabaseHelper(MainActivity.this));
-                }
-                mode.finish();
-                break;
-            case R.id.actionMode_select_all:
-                break;
-        }
-        return false;
-    }
-
-
-    @Override
-    public void onDestroyActionMode(ActionMode mode) {
-        if (mCheckedItem.size() != 0) { refreshList(); }
-        mCheckedItem.clear();
-        mActionMode = null;
-    }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -876,4 +825,53 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         }
     }
 
+    @Override
+    public boolean onCreateActionMode(final ActionMode mode, final Menu
+            menu) {
+
+        mode.getMenuInflater().inflate(R.menu.action_mode, menu);
+        mActionMode = mode;
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(final ActionMode mode, final Menu
+            menu) {
+        return true;
+    }
+
+    @Override
+    public boolean onActionItemClicked(final ActionMode mode, final
+    MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.actionMode_finish:
+                Note note;
+                for (int i = 0; i < mCheckedItem.size(); i++) {
+                    note = mCheckedItem.get(i);
+                    note.setFinished(true);
+                    Log.i("onActionItemClicked()", "note " + note.getContent() + " , id " + note
+                            .getID() + " is finished.");
+                    note.commit(DatabaseHelper.getDatabaseHelper(MainActivity.this));
+                }
+                mode.finish();
+                break;
+            case R.id.actionMode_delete:
+                Note note2;
+                for (int i = 0; i < mCheckedItem.size(); i++) {
+                    note2 = mCheckedItem.get(i);
+                    note2.delete(DatabaseHelper.getDatabaseHelper(MainActivity.this));
+                }
+                mode.finish();
+                break;
+            case R.id.actionMode_select_all:
+                break;
+        }
+        return false;
+    }
+
+    @Override public void onDestroyActionMode(final ActionMode mode) {
+        if (mCheckedItem.size() != 0) { refreshList(); }
+        mCheckedItem.clear();
+        mActionMode = null;
+    }
 }

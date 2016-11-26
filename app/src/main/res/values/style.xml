@@ -13,6 +13,7 @@
             @android:style/Widget.Holo.ActionButton.Overflow
         </item>
         <item name="android:actionBarStyle">@style/MyTheme.ActionBar</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="MyTheme.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
