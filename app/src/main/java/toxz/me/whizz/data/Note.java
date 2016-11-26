@@ -26,7 +26,7 @@ public class Note {
     @Id
     private long ID = -1;
     private String mContent = "";
-    private long mCreatedTime = 0;
+    private long mCreatedTime = System.currentTimeMillis();
     private boolean isFinished = false;
     private long mFinishedTime = 0;
     private long mDeadline = 0;
