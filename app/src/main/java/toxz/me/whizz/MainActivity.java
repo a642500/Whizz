@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -39,10 +40,13 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,7 +58,7 @@ import toxz.me.whizz.data.DatabaseHelper;
 import toxz.me.whizz.data.Note;
 import toxz.me.whizz.dateparser.ParsedDate;
 import toxz.me.whizz.dateparser.ParserUtil;
-import toxz.me.whizz.monitor.NoticeMonitorService;
+import toxz.me.whizz.monitor.MonitorService;
 import toxz.me.whizz.view.ProgressionDateSpinner;
 import toxz.me.whizz.view.ProgressionDateSpinner.ProgressionAdapter.Level;
 
@@ -70,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
     public static final int SCROLL_FLAG_FROM_TWO_TO_ONE = 1;
     private static final String TAG = "MainActivity";
 
-    final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm 创建");
+    final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm 创建",
+            Locale.getDefault());
     private LayoutInflater mInflater;
     private Spinner mDaySpinner, mTimeSpinner;
     private ViewPager mViewPager;
@@ -492,8 +497,9 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                         //                        Bitmap bitmap = BitmapFactory.decodeFile
                         // (mCurrentNote.getImagesPath().get(i));
                         //                        imageView.setImageBitmap(bitmap);
-                        Picasso.with(MainActivity.this).load(mCurrentNote.getImagesPath().get(i))
-                                .error(R.drawable.ic_launcher).into(imageView);
+                        Picasso.with(MainActivity.this).load(("file://" + mCurrentNote
+                                .getImagesPath().get(i))).error(R.drawable.ic_launcher)
+                                .into(imageView);
                     } else {
                         Log.i("refreshNotePager()", "kind 2 was created ! i=" + i);
                         linearLayout = (LinearLayout) mInflater.inflate(R.layout
@@ -505,7 +511,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                         // (mCurrentNote.getImagesPath().get(i));
                         //                        imageView1.setImageBitmap(bitmap1);
                         Picasso.with(MainActivity.this)
-                                .load(mCurrentNote.getImagesPath().get(i))
+                                .load("file://" + mCurrentNote.getImagesPath().get(i))
                                 .error(R.drawable.ic_launcher)
                                 .into(imageView1);
 
@@ -517,7 +523,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                         // (mCurrentNote.getImagesPath().get(i + 1));
                         //                        imageView2.setImageBitmap(bitmap2);
                         Picasso.with(MainActivity.this)
-                                .load(mCurrentNote.getImagesPath().get(i + 1))
+                                .load("file://" + mCurrentNote.getImagesPath().get(i + 1))
                                 .error(R.drawable.ic_launcher)
                                 .into(imageView2);
                     }
@@ -559,7 +565,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             mCurrentPage = 0;
             onScrollPage(SCROLL_FLAG_FROM_TWO_TO_ONE);
         }
-        sendBroadcast(new Intent(NoticeMonitorService.MY_ACTION_MAIN_ACTIVITY_EXIT));
+        sendBroadcast(new Intent(MonitorService.MY_ACTION_MAIN_ACTIVITY_EXIT));
         super.onBackPressed();
     }
 
@@ -774,8 +780,13 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
             case R.id.image:
             case R.id.image1:
             case R.id.image2:
-                Uri uri = (Uri) v.getTag();
+                String path = (String) v.getTag();
                 Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                Uri uri = FileProvider.getUriForFile(this, getApplicationContext()
+                        .getPackageName() + ".provider", new File(path));
+
                 intent.setDataAndType(uri, "image/*");
                 startActivity(intent);
                 break;
@@ -788,6 +799,7 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_CODE_IMAGE_PICK:
+                Log.i(TAG, String.format("resultCode %d, data %s", requestCode, data));
                 if (resultCode == RESULT_OK && data != null) {
                     Uri image = data.getData();
                     onReceiveImage(image);
@@ -801,21 +813,66 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
     private void onReceiveImage(Uri uri) {
         if (uri != null) {
-            if (mCurrentNote == null) {
-                mCurrentNote = new Note();
+            InputStream inputStream = null;
+            FileOutputStream outputStream = null;
+            try {
+                inputStream = this.getContentResolver().openInputStream(uri);
+                if (inputStream == null) { throw new IOException("unable open image"); }
+
+                File dir = new File(this.getFilesDir(), "images");
+                if (!dir.exists() && !dir.mkdirs()) {
+                    throw new IOException("unable create image dir");
+                }
+
+                File file = new File(dir, System.currentTimeMillis() + ".jpg");
+                Log.i(TAG, String.format("onReceiveImage: file %s", file));
+
+                if (file.exists() && !file.delete()) { throw new IOException(); } else {
+                    outputStream = new FileOutputStream(file);
+
+                    byte[] buffer = new byte[1024];
+
+                    int length;
+                    //copy the file content in bytes
+                    while ((length = inputStream.read(buffer)) > 0) {
+                        outputStream.write(buffer, 0, length);
+                    }
+
+                    inputStream.close();
+                    outputStream.close();
+                    outputStream.flush();
+
+                    if (mCurrentNote == null) {
+                        mCurrentNote = new Note();
+                    }
+
+                    List<String> images = mCurrentNote.getImagesPath();
+                    images = new ArrayList<>(images);
+                    images.add(file.toString());
+                    mCurrentNote.setImagesPath(images);
+                    mCurrentNote.setContent(mTempText);
+                    refreshNotePager();
+                    mTempText = "";
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+                if (outputStream != null) {
+                    try {
+                        outputStream.close();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
             }
 
-            List<String> images = mCurrentNote.getImagesPath();
-            if (images == null) {
-                images = Collections.singletonList(uri.toString());
-            } else {
-                images = new ArrayList<>(images);
-                images.add(uri.toString());
-            }
-            mCurrentNote.setImagesPath(images);
-            mCurrentNote.setContent(mTempText);
-            refreshNotePager();
-            mTempText = "";
+
         }
     }
 

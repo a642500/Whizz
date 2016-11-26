@@ -1,13 +1,11 @@
 package toxz.me.whizz;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import toxz.me.whizz.application.MyApplication;
 import toxz.me.whizz.application.ShortCutCreator;
 
 /**
@@ -19,7 +17,8 @@ public class ShortCreateActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_shortcut);
 
-        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[]{"新建文字事项"}));
+        setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new
+                String[]{"新建文字事项"}));
 
     }
 
@@ -29,7 +28,8 @@ public class ShortCreateActivity extends ListActivity {
         switch (position) {
             case 0:
                 ShortCutCreator.addShortcut(this, ShortCutCreator.NEW_TEXT_NOTE_SHORTCUT);
-                ((MyApplication) getApplication()).getNoticeMonitorService().post("快捷方式已创建", 3000);
+                // ((MyApplication) getApplication()).getNoticeMonitorService().post("快捷方式已创建",
+                // 3000);
                 this.finish();
                 break;
             default:

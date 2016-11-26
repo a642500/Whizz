@@ -2,18 +2,20 @@ package toxz.me.whizz.application;
 
 import android.app.ActivityManager;
 import android.app.Application;
-import android.content.*;
-import android.graphics.Point;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.util.Log;
-import android.view.WindowManager;
 
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Random;
 
 import toxz.me.whizz.additional.QuickSnapService;
-import toxz.me.whizz.monitor.NoticeMonitorService;
 
 
 /**
@@ -22,7 +24,6 @@ import toxz.me.whizz.monitor.NoticeMonitorService;
 public class MyApplication extends Application {
     public static final int LOCAL_ACCOUNT = 0;
     private Initiator mInitiator = new Initiator();
-    private NoticeMonitorService mNoticeMonitorService;
     private QuickSnapService mQuickSnapService;
 
     @Override
@@ -34,15 +35,12 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Picasso.setSingletonInstance(new Picasso.Builder(this).loggingEnabled(true).build());
         mInitiator.notifyInit();
     }
 
     public void newAccount(int kind) {
         mInitiator.newAccount(kind);
-    }
-
-    public NoticeMonitorService getNoticeMonitorService() {
-        return mNoticeMonitorService;
     }
 
     public static class AccountInfo {
@@ -67,25 +65,27 @@ public class MyApplication extends Application {
 
             //初始化账号问题，
             int result = checker.isCorrect();
-            if (result == 1)
-                initAccount();
+            if (result == 1) { initAccount(); }
 
             //初始化各项服务
-            if (!checker.isServiceRunning(NoticeMonitorService.class.getName()))
-                startNoticeService();
-            if (!checker.isServiceRunning(QuickSnapService.class.getName()))
-                startQuickSnapService();
-
+            // if (!checker.isServiceRunning(NoticeMonitorService.class.getName())) {
+            //     startNoticeService();
+            // }
+            // if (!checker.isServiceRunning(QuickSnapService.class.getName())) {
+            //        startQuickSnapService();
+            //    }
         }
 
 
         protected void initAccount() {
-            SharedPreferences sharedPreferences = getSharedPreferences("main_info", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getSharedPreferences("main_info", Context
+                    .MODE_PRIVATE);
             AccountInfo.setAccount(sharedPreferences.getString("account", null));
         }
 
         public void newAccount(int kind) {
-            SharedPreferences sharedPreferences = getSharedPreferences("main_info", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getSharedPreferences("main_info", Context
+                    .MODE_PRIVATE);
             switch (kind) {
                 case 0:
                     int random = 0;
@@ -104,24 +104,25 @@ public class MyApplication extends Application {
 
 
         private void startNoticeService() {
-            Intent intent = new Intent(MyApplication.this,NoticeMonitorService.class);
-        //    Intent intent = new Intent("com.unique.whizzdo.notice.NoticeMonitorService");
-            startService(intent);
-            bindService(intent, new ServiceConnection() {
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
-                    mNoticeMonitorService = (NoticeMonitorService) ((MyBinder) service).getService();
-                }
-
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-
-                }
-            }, BIND_AUTO_CREATE);
+            // Intent intent = new Intent(MyApplication.this, NoticeMonitorService.class);
+            // //    Intent intent = new Intent("com.unique.whizzdo.notice.NoticeMonitorService");
+            // startService(intent);
+            // bindService(intent, new ServiceConnection() {
+            //     @Override
+            //     public void onServiceConnected(ComponentName name, IBinder service) {
+            //         mNoticeMonitorService = (NoticeMonitorService) ((MyBinder) service)
+            //                 .getService();
+            //     }
+            //
+            //     @Override
+            //     public void onServiceDisconnected(ComponentName name) {
+            //
+            //     }
+            // }, BIND_AUTO_CREATE);
         }
 
         private void startQuickSnapService() {
-            Intent intent = new Intent(MyApplication.this,QuickSnapService.class);
+            Intent intent = new Intent(MyApplication.this, QuickSnapService.class);
             // Intent intent = new Intent("com.unique.whizzdo.additional.QuickSnapService");
             startService(intent);
             bindService(intent, new ServiceConnection() {
@@ -142,16 +143,19 @@ public class MyApplication extends Application {
          * @return 1 when the account is correct. return 0 when there is no user's data.
          */
         protected int isCorrect() {
-            SharedPreferences sharedPreferences = getSharedPreferences("main_info", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getSharedPreferences("main_info", Context
+                    .MODE_PRIVATE);
             String account = sharedPreferences.getString("account", null);
-            if (account == null) return 0;
+            if (account == null) { return 0; }
             return 1;
         }
 
         private boolean isServiceRunning(String className) {
             boolean isRunning = false;
-            ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-            List<ActivityManager.RunningServiceInfo> serviceList = activityManager.getRunningServices(30);
+            ActivityManager activityManager = (ActivityManager) getSystemService(Context
+                    .ACTIVITY_SERVICE);
+            List<ActivityManager.RunningServiceInfo> serviceList = activityManager
+                    .getRunningServices(30);
             if (serviceList == null || serviceList.size() <= 0) {
                 return false;
             }

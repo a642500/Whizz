@@ -6,6 +6,7 @@
     <string name="new_note_add_pic_button_content_description">添加语音</string>
     <string name="new_note_set_notice_button_content_description">设置提醒</string>
     <string name="short_cut_name_new_text_note">新建记事</string>
+    <string name="accessibility_service_description">根据您的使用习惯指定合适的提醒方案</string>
 
 
 </resources>

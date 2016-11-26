@@ -61,7 +61,8 @@ class MyListAdapter extends BaseAdapter {
 
     public MyListAdapter(Context context, LayoutInflater inflater) {
         mContext = context;
-        mNotes = DatabaseHelper.getDatabaseHelper(mContext.getApplicationContext()).getNotes(false, MySQLiteOpenHelper.COLUMN_CREATED_TIME, DatabaseHelper.DESC);
+        mNotes = DatabaseHelper.getDatabaseHelper(mContext.getApplicationContext()).getNotes
+                (false, MySQLiteOpenHelper.COLUMN_CREATED_TIME, DatabaseHelper.DESC);
         Collections.sort(mNotes, new Comparator<Note>() {
             @Override
             public int compare(Note lhs, Note rhs) {
@@ -103,21 +104,28 @@ class MyListAdapter extends BaseAdapter {
             ImageView imageView1 = (ImageView) view.findViewById(R.id.image1);
             imageView1.setTag(note.getImagesPath().get(size - 1));
             imageView1.setClickable(false);
-            Picasso.with(mInflater.getContext()).load(note.getImagesPath().get(size - 1)).error(R.drawable.load_image_error).into(imageView1);
+            Picasso.with(mInflater.getContext()).
+                    load("file://" + note.getImagesPath().get(size - 1)).error(R.drawable
+                    .load_image_error).into(imageView1);
             ImageView imageView2 = (ImageView) view.findViewById(R.id.image2);
             imageView2.setTag(note.getImagesPath().get(size - 2));
             imageView2.setClickable(false);
-            Picasso.with(mInflater.getContext()).load(note.getImagesPath().get(size - 2)).error(R.drawable.load_image_error).into(imageView2);
+            Picasso.with(mInflater.getContext()).load("file://" + note.getImagesPath().get(size -
+                    2)).error(R
+                    .drawable.load_image_error).into(imageView2);
         } else if (size == 1) {
             view = mInflater.inflate(R.layout.image_layout, null);
             ImageView imageView = (ImageView) view.findViewById(R.id.image);
             imageView.setTag(note.getImagesPath().get(size - 1));
             imageView.setClickable(false);
-            Picasso.with(mInflater.getContext()).load(note.getImagesPath().get(size - 1)).error(R.drawable.load_image_error).into(imageView);
+            Picasso.with(mInflater.getContext()).load("file://" + note.getImagesPath().get(size -
+                    1)).error(R
+                    .drawable.load_image_error).into(imageView);
         }
 
         if (view != null) {
-            LinearLayout container = ((LinearLayout) convertView.findViewById(R.id.item_image_container));
+            LinearLayout container = ((LinearLayout) convertView.findViewById(R.id
+                    .item_image_container));
             container.removeAllViews();
             container.setVisibility(View.VISIBLE);
             container.addView(view);
