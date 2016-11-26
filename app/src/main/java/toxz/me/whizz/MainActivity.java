@@ -399,13 +399,26 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         mDateSpinner = (ProgressionDateSpinner) (mNewItemPager.findViewById(R.id
                 .progressionDateSpinner));
         mDateSpinner.setSupportFragmentManager(getSupportFragmentManager());
-        mDateSpinner.setOnSelectedListener(new ProgressionDateSpinner.OnSelectedListener() {
+        // mDateSpinner.setOnSelectedListener(new ProgressionDateSpinner.OnSelectedListener() {
+        //     @Override
+        //     public void onSelected(Level level, Calendar cl) {
+        //
+        //     }
+        //
+        //     @Override
+        //     public void onCancel() {
+        //     }
+        // });
+        mDateSpinner.setOnCalendarChangedListener(new ProgressionDateSpinner
+                .OnCalendarChangedListener() {
             @Override
-            public void onSelected(Level level, Calendar cl) {
+            public void onChanged(Calendar before, Calendar after,
+                                  Level beforeLevel, Level afterLevel) {
+
                 if (mCurrentNote == null) {
                     mCurrentNote = new Note();
                 }
-                switch (level) {
+                switch (afterLevel) {
                     case HIGH:
                         mCurrentNote.setImportance(Note.HIGH_IMPORTANCE);
                         break;
@@ -420,21 +433,10 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                         break;
                 }
 
-                mCurrentNote.setDeadline(cl.getTimeInMillis());
-            }
 
-            @Override
-            public void onCancel() {
-                mCurrentNote.setDeadline(0);
-                mCurrentNote.setImportance(Note.NO_IMPORTANCE);
-            }
-        });
-        mDateSpinner.setOnCalendarChangedListener(new ProgressionDateSpinner
-                .OnCalendarChangedListener() {
-            @Override
-            public void onChanged(Calendar before, Calendar after,
-                                  Level beforeLevel, Level afterLevel) {
-                if (after != null && afterLevel == Level.LOW) {
+                if (after != null) {
+                    mCurrentNote.setDeadline(after.getTimeInMillis());
+
                     mDateText.setVisibility(View.VISIBLE);
                     String pattern;
 
@@ -662,7 +664,6 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                                 .setNotice(true)
                                 .setContent(note)
                                 .setCreatedTime(System.currentTimeMillis())
-                                .setImportance(importance)
                                 .create();
                     } else {
                         if (mCurrentNote.getID() == -1) {
@@ -670,7 +671,6 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
                         }
                         mCurrentNote.setContent(note);
                         mCurrentNote.setNotice(true);
-                        mCurrentNote.setImportance(importance);
                     }
                     mCurrentNote.commit(DatabaseHelper.getDatabaseHelper(MainActivity.this));
                     Toast.makeText(MainActivity.this, "已保存", Toast.LENGTH_SHORT).show();
