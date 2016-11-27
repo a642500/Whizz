@@ -2,12 +2,15 @@ package toxz.me.whizz.application;
 
 import android.app.ActivityManager;
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.squareup.picasso.Picasso;
@@ -16,6 +19,7 @@ import java.util.List;
 import java.util.Random;
 
 import toxz.me.whizz.additional.QuickSnapService;
+import toxz.me.whizz.data.DatabaseHelper;
 import toxz.me.whizz.notification.NotificationUtil;
 
 
@@ -76,6 +80,13 @@ public class MyApplication extends Application {
             //        startQuickSnapService();
             //    }
 
+            LocalBroadcastManager.getInstance(MyApplication.this).registerReceiver(new BroadcastReceiver() {
+
+
+                @Override public void onReceive(final Context context, final Intent intent) {
+                    NotificationUtil.registerOrUpdateNotificationBar(context);
+                }
+            }, new IntentFilter(DatabaseHelper.ACTION_NOTES_CHANGED));
             NotificationUtil.registerOrUpdateNotificationBar(MyApplication.this);
         }
 
