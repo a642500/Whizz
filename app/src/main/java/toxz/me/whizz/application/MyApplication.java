@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 import toxz.me.whizz.additional.QuickSnapService;
+import toxz.me.whizz.notification.NotificationUtil;
 
 
 /**
@@ -74,6 +75,8 @@ public class MyApplication extends Application {
             // if (!checker.isServiceRunning(QuickSnapService.class.getName())) {
             //        startQuickSnapService();
             //    }
+
+            NotificationUtil.registerOrUpdateNotificationBar(MyApplication.this);
         }
 
 
