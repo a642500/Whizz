@@ -6,7 +6,7 @@
                 android:background="@drawable/bg_nav_header"
                 android:gravity="bottom"
                 android:padding="16dp"
-                tools:showIn="@layout/layout_navigation"
+                tools:showIn="@layout/main"
     >
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -38,16 +38,18 @@
             android:id="@+id/usernameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="您好"
             android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+            android:textColor="@color/colorPrimary"
             />
 
         <TextView
             android:id="@+id/locationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="登陆后将可以同步数据"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
+            android:textColor="#8b8b8b"
             />
     </LinearLayout>
 

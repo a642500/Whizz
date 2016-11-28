@@ -6,13 +6,13 @@
         <item
             android:id="@+id/navigation_item_main"
             android:checked="true"
+            android:icon="@drawable/ic_dns_black_24dp"
             android:title="当前记事"/>
-        <!--android:icon="@drawable/ic_world"-->
 
         <item
             android:id="@+id/navigation_item_1"
+            android:icon="@drawable/ic_done_black_24dp"
             android:title="存档"/>
-        <!--android:icon="@drawable/ic_diary"-->
 
         <item
             android:id="@+id/navigation_item_2"
