@@ -229,8 +229,10 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name,
                 R.string.app_name);
-        drawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.setHomeAsUpIndicator(R.drawable.logo_whizzdo);
+
+        drawerLayout.addDrawerListener(mDrawerToggle);
+        drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.action_bar));
     }
 
     //    DevOpen

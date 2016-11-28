@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MyTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/action_bar</item>
+        <item name="colorPrimaryDark">@color/action_bar_dark</item>
+        <item name="colorAccent">@color/action_mode_background</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:actionModeStyle">@android:style/Widget.Holo.ActionMode</item>
+        <item name="android:actionModeBackground">@color/action_mode_background</item>
+        <item name="android:actionModeCloseDrawable">@drawable/icon_action_mode_back</item>
+        <item name="android:actionOverflowButtonStyle">
+            @android:style/Widget.Holo.ActionButton.Overflow
+        </item>
+        <item name="android:actionBarStyle">@style/MyTheme.ActionBar</item>
+
+        <!-- make action mode overlay toolbar -->
+        <item name="windowActionModeOverlay">true</item>
+
+        <!-- change drawer arrow color-->
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
+
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+</resources>
