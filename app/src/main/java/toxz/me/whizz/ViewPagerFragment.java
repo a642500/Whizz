@@ -24,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -97,6 +96,10 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
     private int mImageContainerWidth = 0, mImageHeight = 0, mCurrentPage = 0;
     private TextView mDateText;
     private ProgressionDateSpinner mDateSpinner;
+
+    EditText getNewNoteEditText() {
+        return mNewNoteEditText;
+    }
 
     public ViewPager getViewPager() {
         return mViewPager;
@@ -369,27 +372,14 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
                 refreshNotePager();
                 if (mNewNoteEditText != null) {
                     mNewNoteEditText.requestFocus();
-                    InputMethodManager inputMethodManager = (InputMethodManager)
-                            getContext().getSystemService
-                                    (Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.showSoftInput(mNewNoteEditText, 0);
+                    KeyboardUtil.showKeyboard(getContext(), mNewNoteEditText);
                 }
                 break;
             case SCROLL_FLAG_FROM_TWO_TO_ONE:
                 Log.i("onScrollPage()", "SCROLL_FLAG_FROM_TWO_TO_ONE");
                 mNewNoteEditText.clearFocus();
                 mMainList.requestFocus();
-
-
-                InputMethodManager inputMethodManager = (InputMethodManager) getContext()
-                        .getSystemService
-                                (Context.INPUT_METHOD_SERVICE);
-                try {
-                    inputMethodManager.hideSoftInputFromWindow(mMainList.getWindowToken(), 0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                KeyboardUtil.hideKeyboard(getContext(), mMainList.getWindowToken());
 
                 String note = String.valueOf(mNewNoteEditText.getText());
 

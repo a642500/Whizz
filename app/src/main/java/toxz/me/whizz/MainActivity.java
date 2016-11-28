@@ -101,6 +101,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.action_bar));
+
+        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override public void onDrawerSlide(final View drawerView, final float slideOffset) {
+                KeyboardUtil.hideKeyboard(MainActivity.this, drawerView.getWindowToken());
+            }
+
+            @Override public void onDrawerOpened(final View drawerView) {
+
+            }
+
+            @Override public void onDrawerClosed(final View drawerView) {
+                if (mInboxFragment.isAdded()) {
+                    if (mInboxFragment.getViewPager().getCurrentItem() == 1) {
+                        KeyboardUtil.showKeyboard(MainActivity.this,
+                                mInboxFragment.getNewNoteEditText());
+                    }
+                }
+            }
+
+            @Override
+            public void onDrawerStateChanged(final int newState) {
+
+            }
+        });
     }
 
     private void initDao() {
