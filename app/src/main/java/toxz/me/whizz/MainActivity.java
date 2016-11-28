@@ -3,12 +3,17 @@ package toxz.me.whizz;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
@@ -87,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
     private String mTempText = "";
     private LinearLayout mImageContainer;
     private ArrayList<Note> mCheckedItem = new ArrayList<>();
+    public ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     /**
      * Note mCurrent is used to contain temp data, null when create a new note.
@@ -172,7 +180,8 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
         mViewPager.setAdapter(new MyPagerAdapter(mPagers));
 
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
 
 
@@ -196,6 +205,32 @@ public class MainActivity extends AppCompatActivity implements DataChangedListen
 
         DatabaseHelper.getDatabaseHelper(getApplicationContext()).setDatabaseChangedListener(this);
         initDao();
+        initDrawer(toolbar);
+    }
+
+    @Override protected void onPostCreate(@Nullable final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override public boolean onOptionsItemSelected(final MenuItem item) {
+        mDrawerToggle.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override public void onConfigurationChanged(final Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    private void initDrawer(Toolbar toolbar) {
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        navigationView = (NavigationView) findViewById(R.id.navigationView);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name,
+                R.string.app_name);
+        drawerLayout.addDrawerListener(mDrawerToggle);
+        mDrawerToggle.setHomeAsUpIndicator(R.drawable.logo_whizzdo);
     }
 
     //    DevOpen

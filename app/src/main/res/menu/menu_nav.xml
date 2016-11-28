@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/group_switch"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_item_main"
+            android:checked="true"
+            android:title="当前记事"/>
+        <!--android:icon="@drawable/ic_world"-->
+
+        <item
+            android:id="@+id/navigation_item_1"
+            android:title="存档"/>
+        <!--android:icon="@drawable/ic_diary"-->
+
+        <item
+            android:id="@+id/navigation_item_2"
+            android:icon="@drawable/ic_explore"
+            android:title="统计"/>
+
+    </group>
+    <group android:id="@+id/group_settings">
+        <item
+            android:id="@+id/navigation_item_4"
+            android:icon="@drawable/ic_settings"
+            android:title="设置"/>
+    </group>
+</menu>

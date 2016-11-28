@@ -13,13 +13,17 @@
             @android:style/Widget.Holo.ActionButton.Overflow
         </item>
         <item name="android:actionBarStyle">@style/MyTheme.ActionBar</item>
+
+        <!-- make action mode overlay toolbar -->
         <item name="windowActionModeOverlay">true</item>
+
+        <!-- change drawer arrow color-->
+        <item name="drawerArrowStyle">@style/MyDrawerArrowToggle</item>
     </style>
 
     <style name="MyTheme.ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:colorBackground">@color/action_bar</item>
         <item name="android:background">@color/action_bar</item>
-
     </style>
 
     <style name="MyTheme.MyEditText" parent="android:Widget.Holo.Light.EditText">
@@ -30,5 +34,8 @@
         <item name="android:divider">@color/main_background</item>
     </style>
 
+    <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/white</item>
+    </style>
 
 </resources>
