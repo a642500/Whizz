@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
 
 
     <LinearLayout
@@ -30,7 +30,8 @@
                 android:background="@android:color/transparent"
                 android:minWidth="48dp"
                 android:onClick="onClick"
-                android:src="@drawable/action_bar_list" />
+                android:src="@drawable/ic_inbox_black_24dp"
+                android:tint="@color/colorPrimary"/>
 
             <ImageButton
                 android:id="@+id/action_bar_item_add_note"
@@ -40,7 +41,8 @@
                 android:background="@android:color/transparent"
                 android:minWidth="48dp"
                 android:onClick="onClick"
-                android:src="@drawable/action_bar_add_note" />
+                android:src="@drawable/ic_create_black_24dp"
+                android:tint="@color/colorPrimary"/>
         </LinearLayout>
 
         <com.viewpagerindicator.UnderlinePageIndicator
@@ -50,7 +52,7 @@
             android:layout_gravity="bottom"
             android:layout_marginBottom="3dp"
             android:background="@android:color/transparent"
-            android:fadeScrollbars="false" />
+            android:fadeScrollbars="false"/>
     </LinearLayout>
 
 </RelativeLayout>
