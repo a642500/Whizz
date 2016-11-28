@@ -2,9 +2,10 @@
 <de.timroes.android.listview.EnhancedListView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_list"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/main_background"
     android:choiceMode="multipleChoice"
+    android:divider="@drawable/line_divider"
     android:listSelector="@drawable/list_item_selector"
     />

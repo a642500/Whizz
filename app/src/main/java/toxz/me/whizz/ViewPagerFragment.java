@@ -443,7 +443,7 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
         }
         //if contain no items，not display list, and the notice for no item will displayed.
         else { mNoNote.setVisibility(View.GONE); }
-        mMainList.setAdapter(new MyListAdapter(getLayoutInflater(null)));
+        mMainList.setAdapter(new MyListAdapter(getLayoutInflater(null), false));
     }
 
     /* call by init() */

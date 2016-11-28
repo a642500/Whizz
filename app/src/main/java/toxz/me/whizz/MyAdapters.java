@@ -55,14 +55,16 @@ class MyPagerAdapter extends PagerAdapter {
 }
 
 class MyListAdapter extends BaseAdapter {
+    private final boolean isFinished;
     private ArrayList<Note> mNotes;
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public MyListAdapter(LayoutInflater inflater) {
+    public MyListAdapter(LayoutInflater inflater, boolean isFinished) {
         mContext = inflater.getContext();
+        this.isFinished = isFinished;
         mNotes = DatabaseHelper.getDatabaseHelper(mContext.getApplicationContext()).getNotes
-                (false, MySQLiteOpenHelper.COLUMN_CREATED_TIME, DatabaseHelper.DESC);
+                (isFinished, MySQLiteOpenHelper.COLUMN_CREATED_TIME, DatabaseHelper.DESC);
         Collections.sort(mNotes, new Comparator<Note>() {
             @Override
             public int compare(Note lhs, Note rhs) {
@@ -141,17 +143,20 @@ class MyListAdapter extends BaseAdapter {
             tv.setText(content);
         }
         View line = convertView.findViewById(R.id.item_importance_indicator);
-        switch (note.getImportance()) {
-            case Note.HIGH_IMPORTANCE:
-                line.setBackgroundResource(R.color.line_urgency);
-                break;
-            case Note.NORMAL_IMPORTANCE:
-                line.setBackgroundResource(R.color.line_normal);
-                break;
-            default:
-                line.setBackgroundResource(R.color.line_ease);
-                break;
+        if (!isFinished) {
+            switch (note.getImportance()) {
+                case Note.HIGH_IMPORTANCE:
+                    line.setBackgroundResource(R.color.line_urgency);
+                    break;
+                case Note.NORMAL_IMPORTANCE:
+                    line.setBackgroundResource(R.color.line_normal);
+                    break;
+                default:
+                    line.setBackgroundResource(R.color.line_ease);
+                    break;
+            }
         }
+        line.setVisibility(isFinished ? View.INVISIBLE : View.VISIBLE);
 
         //TODO 设置item view
 
