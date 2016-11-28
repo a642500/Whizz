@@ -59,23 +59,6 @@
                 android:onClick="onClick"
                 android:src="@drawable/bottom_bar_add_pic"/>
 
-            <ImageButton
-                android:id="@+id/bottom_bar_notice"
-                style="?android:buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/new_note_set_notice_button_content_description"
-                android:onClick="onClick"
-                android:src="@drawable/bottom_bar_notice_grey"
-                android:visibility="gone"/>
-
-            <ButtonSpinner
-                android:id="@+id/bottom_bar_notice_spinner"
-                style="?android:buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
-
             <toxz.me.whizz.view.RectAnimationLinearLayout
                 android:id="@+id/dateGroup"
                 android:layout_width="wrap_content"
@@ -100,22 +83,6 @@
                     tools:text="12月2日"/>
 
             </toxz.me.whizz.view.RectAnimationLinearLayout>
-
-
-            <!--<Spinner-->
-            <!--android:id="@+id/day_spinner"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:visibility="gone" />-->
-
-            <!--<Spinner-->
-            <!--android:id="@+id/time_spinner"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:visibility="gone" />-->
-
-
-            <!--添加显示提醒的时间的文字-->
         </LinearLayout>
 
     </LinearLayout>
