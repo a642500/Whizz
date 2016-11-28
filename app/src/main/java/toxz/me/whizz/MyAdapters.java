@@ -59,8 +59,8 @@ class MyListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public MyListAdapter(Context context, LayoutInflater inflater) {
-        mContext = context;
+    public MyListAdapter(LayoutInflater inflater) {
+        mContext = inflater.getContext();
         mNotes = DatabaseHelper.getDatabaseHelper(mContext.getApplicationContext()).getNotes
                 (false, MySQLiteOpenHelper.COLUMN_CREATED_TIME, DatabaseHelper.DESC);
         Collections.sort(mNotes, new Comparator<Note>() {
