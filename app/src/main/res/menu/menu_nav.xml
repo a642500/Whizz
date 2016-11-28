@@ -4,13 +4,13 @@
         android:id="@+id/group_switch"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/navigation_item_main"
+            android:id="@+id/navigation_item_inbox"
             android:checked="true"
             android:icon="@drawable/ic_dns_black_24dp"
             android:title="当前记事"/>
 
         <item
-            android:id="@+id/navigation_item_1"
+            android:id="@+id/navigation_item_archive"
             android:icon="@drawable/ic_done_black_24dp"
             android:title="存档"/>
 
@@ -22,7 +22,7 @@
     </group>
     <group android:id="@+id/group_settings">
         <item
-            android:id="@+id/navigation_item_4"
+            android:id="@+id/navigation_item_settings"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="设置"/>
     </group>

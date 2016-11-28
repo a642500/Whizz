@@ -3,8 +3,12 @@ package toxz.me.whizz;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,11 +26,16 @@ import toxz.me.whizz.application.MyApplication;
 import toxz.me.whizz.monitor.MonitorService;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
     public ActionBarDrawerToggle mDrawerToggle;
     private List<ActivityCallback> mCallbacks = new ArrayList<>();
+    private ViewPagerFragment mInboxFragment;
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
+    private Handler mHandler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,12 +59,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.main);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-         /* initViewPager */
-        //TODO set fragment
-        ViewPagerFragment fragment = (ViewPagerFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment);
-
-
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -64,6 +67,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         actionBar.setTitle(null);
 
         initDrawer(toolbar);
+
+        mInboxFragment = (ViewPagerFragment) Fragment
+                .instantiate(this, "toxz.me.whizz.ViewPagerFragment");
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainer, mInboxFragment, "Inbox")
+                .commitAllowingStateLoss();
     }
 
     @Override protected void onPostCreate(@Nullable final Bundle savedInstanceState) {
@@ -82,15 +91,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initDrawer(Toolbar toolbar) {
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigationView);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        mNavigationView = (NavigationView) findViewById(R.id.navigationView);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name,
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name,
                 R.string.app_name);
         mDrawerToggle.setHomeAsUpIndicator(R.drawable.logo_whizzdo);
 
-        drawerLayout.addDrawerListener(mDrawerToggle);
-        drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.action_bar));
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.action_bar));
     }
 
     private void initDao() {
@@ -109,6 +119,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return;
             }
         }
+
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawers();
+            return;
+        }
+
+
+        if (!mInboxFragment.isAdded()) {
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fragment_fade_in, R.anim.fragment_fade_out)
+                    .replace(R.id.fragmentContainer, mInboxFragment).commitAllowingStateLoss();
+            mNavigationView.setCheckedItem(R.id.navigation_item_inbox);
+            return;
+        }
+
+
         sendBroadcast(new Intent(MonitorService.MY_ACTION_MAIN_ACTIVITY_EXIT));
         super.onBackPressed();
     }
@@ -127,6 +153,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void unregisterActivityCallback(ActivityCallback callback) {
         mCallbacks.remove(callback);
+    }
+
+    @Override public boolean onNavigationItemSelected(@NonNull final MenuItem menuItem) {
+        mDrawerLayout.closeDrawers();
+
+        if (menuItem.isChecked()) {
+            return true;
+        }
+        final int menuId = menuItem.getItemId();
+
+
+        if (menuId == R.id.navigation_item_settings) {
+            //TODO delayStartSettingsActivity();
+            return false;
+        } else {
+            mHandler.postDelayed(new Runnable() {
+                @Override public void run() {
+                    switch (menuId) {
+                        case R.id.navigation_item_inbox:
+                            getSupportFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.fragment_fade_in,
+                                            R.anim.fragment_fade_out)
+                                    .replace(R.id.fragmentContainer, mInboxFragment)
+                                    .commitAllowingStateLoss();
+                            break;
+                        case R.id.navigation_item_archive:
+                            getSupportFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.fragment_fade_in,
+                                            R.anim.fragment_fade_out)
+                                    .replace(R.id.fragmentContainer, Fragment.instantiate
+                                            (MainActivity.this,
+                                                    "toxz.me.whizz.ArchiveFragment"))
+                                    .commitAllowingStateLoss();
+                            break;
+                        case R.id.navigation_item_2:
+                            //TODO add this
+                            break;
+                    }
+                }
+            }, 300);
+            return true;
+        }
     }
 
     public interface ActivityCallback {
