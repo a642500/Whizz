@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="16dp"
+              android:background="@drawable/bg_btn_white"
+              android:elevation="12dp"
+              android:gravity="center_vertical"
+              android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:minHeight="64dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:text="有一项任务需要处理:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Notification.Info"
+                android:textColor="@color/gray"/>
+
+            <TextView
+                android:id="@+id/contentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="8dp"
+                android:text="周五交数学作业"
+                android:textAppearance="@style/TextAppearance.AppCompat.Notification.Title"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="9月12日"
+            android:textColor="@color/red"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="end">
+
+        <Button
+            android:id="@+id/delayBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_white"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:padding="16dp"
+            android:text="延期"
+            android:textColor="@color/blue"/>
+
+        <Button
+            android:id="@+id/finishBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_white"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:padding="16dp"
+            android:text="完成"
+            android:textColor="@color/blue"/>
+    </LinearLayout>
+
+</LinearLayout>

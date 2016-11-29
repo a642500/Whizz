@@ -16,6 +16,8 @@
     <color name="click_background">#ececec</color>
     <color name="selected_background">#e8e8e8</color>
 
+    <color name="color_bg_toast">#312f2f</color>
+
     <!--Import from ExpandableButtonDemo-->
     <color name="green">#75cd00</color>
     <color name="green_dark">#3c6e02</color>

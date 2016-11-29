@@ -5,13 +5,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 
 import toxz.me.whizz.application.SettingsHelper;
+import toxz.me.whizz.data.Note;
+import toxz.me.whizz.notification.NotificationUtil;
 
 /**
  * Created by carlos on 5/31/14.
  */
 public class TestActivity extends Activity implements View.OnClickListener {
+
+    private EditText mMainEditText;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,10 +31,24 @@ public class TestActivity extends Activity implements View.OnClickListener {
                 SettingsHelper.setSnapFlash(isChecked, TestActivity.this);
             }
         });
+
+        mMainEditText = (EditText) findViewById(R.id.editText);
     }
 
     @Override
     public void onClick(final View v) {
+        Note note = new Note();
+        switch (v.getId()) {
+            case R.id.testToastBtn:
+                note.setContent(mMainEditText.getText().toString());
+                NotificationUtil.toastNote(this, note);
+                break;
+            case R.id.testDialogBtn:
+                note.setContent(mMainEditText.getText().toString());
+                note.setDeadline(System.currentTimeMillis());
+                NotificationUtil.dialogNote(this, note);
+                break;
+        }
         // final String text = ((EditText) findViewById(R.id.editText)).getText().toString();
         // final int time = Integer.parseInt(((EditText) findViewById(R.id.editText_time)).getText()
         //         .toString());
@@ -45,9 +65,5 @@ public class TestActivity extends Activity implements View.OnClickListener {
         //         }
         //     }
         // }, time);
-
-
-        this.finish();
-
     }
 }

@@ -47,7 +47,8 @@
         </activity>
         <activity
             android:name=".TestActivity"
-            android:label="测试通知">
+            android:label="测试通知"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

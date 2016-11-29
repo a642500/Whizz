@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -22,7 +21,6 @@ import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import toxz.me.whizz.application.MyApplication;
 import toxz.me.whizz.monitor.MonitorService;
 
 
@@ -41,15 +39,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        init();
         //if account is not initialized ,launch welcome activity.
-        if (MyApplication.AccountInfo.getAccount() == null) {
-            Log.i("vital", "account == null ");
-            Intent intent = new Intent(this, WelcomeActivity.class);
-            startActivity(intent);
-            this.finish();
-        } else {
-            init();
-        }
+        // if (MyApplication.AccountInfo.getAccount() == null) {
+        //     Log.i("vital", "account == null ");
+        //     Intent intent = new Intent(this, WelcomeActivity.class);
+        //     startActivity(intent);
+        //     this.finish();
+        // } else {
+        //     init();
+        // }
     }
 
     /**
