@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<de.timroes.android.listview.EnhancedListView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_background"
-    android:choiceMode="multipleChoice"
-    android:divider="@drawable/line_divider"
-    android:listSelector="@drawable/list_item_selector"
-    />
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/no_note"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/main_background"
+        android:onClick="onClick"
+        android:scaleType="center"
+        android:src="@drawable/pic_empty"
+        android:visibility="gone"/>
+
+    <de.timroes.android.listview.EnhancedListView
+        android:id="@+id/main_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/main_background"
+        android:choiceMode="multipleChoice"
+        android:listSelector="@drawable/list_item_selector"
+        />
+
+</LinearLayout>

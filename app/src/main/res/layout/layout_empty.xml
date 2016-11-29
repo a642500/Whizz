@@ -7,7 +7,7 @@
            android:background="@color/main_background"
            android:onClick="onClick"
            android:scaleType="center"
-           android:src="@drawable/bg_no_notes"
+           android:src="@drawable/pic_empty"
            tools:context=".MainActivity">
 
 </ImageView>

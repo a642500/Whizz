@@ -38,8 +38,7 @@ public class ArchiveFragment extends Fragment implements AdapterView.OnItemClick
         View root = inflater.inflate(R.layout.pager_archive, container, false);
 
         mListView = (EnhancedListView) root.findViewById(R.id.main_list);
-        mListView.setEmptyView(inflater.inflate(R.layout.layout_empty, null));
-
+        mListView.setEmptyView(root.findViewById(R.id.no_note));
         mListView.setOnItemClickListener(this);
         mListView.setOnLongClickListener(this);
         refreshList();
@@ -47,7 +46,8 @@ public class ArchiveFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     private void refreshList() {
-        mListView.setAdapter(new MyListAdapter(getLayoutInflater(null), true));
+        MyListAdapter listAdapter = new MyListAdapter(getLayoutInflater(null), true);
+        mListView.setAdapter(listAdapter);
     }
 
     @Override
