@@ -24,12 +24,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/MyTheme">
+        android:theme="@style/BaseTheme.MainTheme">
 
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -57,6 +56,16 @@
         <activity
             android:name=".additional.QuickSnapActivity"
             android:excludeFromRecents="true"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_settings"
+            android:theme="@style/BaseTheme.AppTheme"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"
+                />
+        </activity>
 
         <service
             android:name=".monitor.MonitorService"

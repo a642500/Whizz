@@ -189,7 +189,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         if (menuId == R.id.navigation_item_settings) {
-            //TODO delayStartSettingsActivity();
+            mHandler.postDelayed(new Runnable() {
+                @Override public void run() {
+                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(intent);
+                }
+            }, 300);
             return false;
         } else {
             mHandler.postDelayed(new Runnable() {

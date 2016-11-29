@@ -53,3 +53,13 @@ repositories {
 dependencies {
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
 }
+
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+dependencies {
+    compile 'com.jenzz:materialpreference:1.3'
+}
