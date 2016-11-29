@@ -94,6 +94,7 @@ public class InboxFragment extends Fragment implements ActionMode.Callback, View
     private int mCurrentPage = 0;
     private TextView mDateText;
     private ProgressionDateSpinner mDateSpinner;
+    private UnderlinePageIndicator mPagerIndicator;
 
     EditText getNewNoteEditText() {
         return mNewNoteEditText;
@@ -128,14 +129,14 @@ public class InboxFragment extends Fragment implements ActionMode.Callback, View
         if (null == actionBar.getCustomView()) {
             View customActionBarView = getLayoutInflater(savedInstanceState)
                     .inflate(R.layout.custom_action_bar, null);
-            UnderlinePageIndicator pagerIndicator = (UnderlinePageIndicator) customActionBarView
+            mPagerIndicator = (UnderlinePageIndicator) customActionBarView
                     .findViewById(R.id.pageIndicator);
-            pagerIndicator.setSelectedColor(getResources().getColor(R.color.item_background));
-            pagerIndicator.setFades(false);
-            pagerIndicator.setViewPager(mViewPager);
-            pagerIndicator.setOnPageChangeListener(this);
+            mPagerIndicator.setSelectedColor(getResources().getColor(R.color.item_background));
+            mPagerIndicator.setFades(false);
+            mPagerIndicator.setOnPageChangeListener(this);
             actionBar.setCustomView(customActionBarView);
         }
+        mPagerIndicator.setViewPager(mViewPager);// we must reset
         actionBar.setDisplayShowCustomEnabled(true);
 
     }
