@@ -225,12 +225,16 @@ public class InboxFragment extends Fragment implements ActionMode.Callback, View
                             position) {
                         if (position < listView.getAdapter().getCount()) {
                             final Note note = (Note) listView.getAdapter().getItem(position);
-                            note.delete(DatabaseHelper.getDatabaseHelper(mMainList.getContext()));
+                            note.setFinished(true);
+                            note.setFinishedTime(System.currentTimeMillis());
+                            note.commit(DatabaseHelper.getDatabaseHelper(mMainList.getContext()));
                             return new EnhancedListView.Undoable() {
                                 @Override
                                 public void undo() {
-                                    note.resetID().commit(DatabaseHelper.getDatabaseHelper
-                                            (mMainList.getContext()));
+                                    note.setFinishedTime(0);
+                                    note.setFinished(false);
+                                    note.commit(DatabaseHelper.getDatabaseHelper(mMainList
+                                            .getContext()));
                                 }
                             };
                         } else {
