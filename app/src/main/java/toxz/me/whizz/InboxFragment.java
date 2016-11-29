@@ -61,14 +61,13 @@ import static android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 /**
  * Created by Carlos on 11/28/16.
  */
-public class ViewPagerFragment extends Fragment implements ActionMode.Callback, ViewPager
+public class InboxFragment extends Fragment implements ActionMode.Callback, ViewPager
         .OnPageChangeListener, MainActivity.ActivityCallback {
 
     public static final int REQUEST_CODE_IMAGE_PICK = 1023;
     public static final int SCROLL_FLAG_FROM_ONE_TO_TWO = 0;
     public static final int SCROLL_FLAG_FROM_TWO_TO_ONE = 1;
-    private static final String TAG = "ViewPagerFragment";
-    private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
+    private static final String TAG = "InboxFragment";
     final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm 创建",
             Locale.getDefault());
     private View mNoNote;
@@ -86,14 +85,13 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
     private String mTempText = "";
     private EditText mNewNoteEditText;
     private LinearLayout mImageContainer;
-    private View mNewItemPager;
     private TextView mCreatedTimeText;
     /**
      * Note mCurrent is used to contain temp data, null when create a new note.
      */
     private Note mCurrentNote = null;
     private ActionMode mActionMode = null;
-    private int mImageContainerWidth = 0, mImageHeight = 0, mCurrentPage = 0;
+    private int mCurrentPage = 0;
     private TextView mDateText;
     private ProgressionDateSpinner mDateSpinner;
 
@@ -111,8 +109,8 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
         mViewPager = new ViewPager(inflater.getContext());
 
         List<View> mPagers = new ArrayList<>();
-        mPagers.add(initMainPager(inflater));
-        mPagers.add(initAddNotePager());
+        mPagers.add(createMainPager(inflater));
+        mPagers.add(createAddNotePager());
 
         mViewPager.setAdapter(new MyPagerAdapter(mPagers));
 
@@ -169,13 +167,14 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
         }
     }
 
-    private View initMainPager(LayoutInflater inflater) {
+    private View createMainPager(LayoutInflater inflater) {
         @SuppressLint("InflateParams")
         View itemListPager = inflater.inflate(R.layout.item_list_pager, null);
         assert itemListPager != null;
 
         mMainList = (EnhancedListView) itemListPager.findViewById(R.id.main_list);
         mNoNote = itemListPager.findViewById(R.id.no_note);
+        //noinspection deprecation
         mMainList.setDivider(getResources().getDrawable(R.drawable.line_divider));
 
         AdapterView.OnItemClickListener listItemClickListener = new AdapterView
@@ -210,7 +209,7 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long
                     id) {
                 if (mActionMode != null) { return true; }
-                ((AppCompatActivity) getActivity()).startSupportActionMode(ViewPagerFragment.this);
+                ((AppCompatActivity) getActivity()).startSupportActionMode(InboxFragment.this);
                 view.setBackgroundResource(R.color.selected_background);
                 Log.i("onItemLongClick()", "play actionMode, item " + position + " is added to " +
                         "ArrayList");
@@ -295,10 +294,8 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
         mActionMode = null;
     }
 
-    //TODO IMPROVE: when scroll between two page, disable the relayout of the first pager
-    //TODO pictures break down after restart app, maybe because permission, I believe copying a
     // picture into our zoom can fix it.
-    private void refreshNotePager() {
+    @SuppressLint("InflateParams") private void refreshNotePager() {
         mImageContainer.removeAllViews();
         /* what need to be refresh: image list , alarm color , time pick */
         if (mCurrentNote == null) {
@@ -317,8 +314,7 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
                     if (i == mCurrentNote.getImagesPath().size() - 1) {
                         Log.i("refreshNotePager()", "kind 1 was created ! ");
                         linearLayout = (LinearLayout) getLayoutInflater(null).inflate(R.layout
-                                        .image_layout,
-                                null);
+                                .image_layout, null);
                         ImageView imageView = (ImageView) linearLayout.findViewById(R.id.image);
                         imageView.setTag(mCurrentNote.getImagesPath().get(i));
                         //                        Bitmap bitmap = BitmapFactory.decodeFile
@@ -385,6 +381,7 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
 
                 boolean nullNote = mCurrentNote == null;
 
+                //noinspection ConstantConditions
                 boolean noPic = nullNote || mCurrentNote.getImagesPath() == null
                         || mCurrentNote.getImagesPath().size() == 0;
                 boolean noSavedText = nullNote || mCurrentNote.getContent() == null
@@ -436,11 +433,11 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
         mMainList.setAdapter(new MyListAdapter(getLayoutInflater(null), false));
     }
 
-    /* call by init() */
-    private View initAddNotePager() {
-        mNewItemPager = getLayoutInflater(null).inflate(R.layout.new_item_pager, null);
-        assert mNewItemPager != null;
-        mNewNoteEditText = (EditText) mNewItemPager.findViewById(R.id.et_input_note);
+    private View createAddNotePager() {
+        @SuppressLint("InflateParams")
+        View newItemPager = getLayoutInflater(null).inflate(R.layout.new_item_pager, null);
+        assert newItemPager != null;
+        mNewNoteEditText = (EditText) newItemPager.findViewById(R.id.et_input_note);
         // final RectAnimationLinearLayout dateGroup = (RectAnimationLinearLayout) mNewItemPager
         //         .findViewById(R.id.dateGroup);
 
@@ -474,11 +471,11 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
             }
         });
 
-        mImageContainer = (LinearLayout) mNewItemPager.findViewById(R.id.image_container);
-        mCreatedTimeText = (TextView) mNewItemPager.findViewById(R.id.tv_create_time);
+        mImageContainer = (LinearLayout) newItemPager.findViewById(R.id.image_container);
+        mCreatedTimeText = (TextView) newItemPager.findViewById(R.id.tv_create_time);
 
-        mDateText = (TextView) mNewItemPager.findViewById(R.id.dateText);
-        mDateSpinner = (ProgressionDateSpinner) (mNewItemPager.findViewById(R.id
+        mDateText = (TextView) newItemPager.findViewById(R.id.dateText);
+        mDateSpinner = (ProgressionDateSpinner) (newItemPager.findViewById(R.id
                 .progressionDateSpinner));
         mDateSpinner.setSupportFragmentManager(getFragmentManager());
         // mDateSpinner.setOnSelectedListener(new ProgressionDateSpinner.OnSelectedListener() {
@@ -541,7 +538,7 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
         });
 
         refreshNotePager();
-        return mNewItemPager;
+        return newItemPager;
     }
 
 
@@ -671,6 +668,7 @@ public class ViewPagerFragment extends Fragment implements ActionMode.Callback, 
                 break;
             case R.id.bottom_bar_image:
                 mTempText = mNewNoteEditText.getText().toString();
+                //noinspection ConstantConditions
                 if (mTempText == null) { mTempText = ""; }
                 startActivityForResult(new Intent(Intent.ACTION_PICK, EXTERNAL_CONTENT_URI),
                         REQUEST_CODE_IMAGE_PICK);

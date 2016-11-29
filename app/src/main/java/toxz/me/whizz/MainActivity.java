@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MainActivity";
     public ActionBarDrawerToggle mDrawerToggle;
     private List<ActivityCallback> mCallbacks = new ArrayList<>();
-    private ViewPagerFragment mInboxFragment;
+    private InboxFragment mInboxFragment;
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private Handler mHandler = new Handler();
@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initDrawer(toolbar);
 
-        mInboxFragment = (ViewPagerFragment) Fragment
-                .instantiate(this, "toxz.me.whizz.ViewPagerFragment");
+        mInboxFragment = (InboxFragment) Fragment
+                .instantiate(this, "toxz.me.whizz.InboxFragment");
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, mInboxFragment, "Inbox")
                 .commitAllowingStateLoss();
