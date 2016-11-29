@@ -217,7 +217,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     .commitAllowingStateLoss();
                             break;
                         case R.id.navigation_item_2:
-                            //TODO add this
+                            getSupportFragmentManager().beginTransaction()
+                                    .setCustomAnimations(R.anim.fragment_fade_in,
+                                            R.anim.fragment_fade_out)
+                                    .replace(R.id.fragmentContainer, Fragment.instantiate
+                                            (MainActivity.this, "toxz.me.whizz.StatisticsFragment"))
+                                    .commitAllowingStateLoss();
                             break;
                     }
                 }
